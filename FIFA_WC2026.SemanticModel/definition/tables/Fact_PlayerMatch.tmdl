@@ -1,0 +1,554 @@
+/// One row per player per match (54,600). Grain of all player measures.
+table Fact_PlayerMatch
+	lineageTag: 4c44c840-01b8-5283-8b07-03d6a1e80090
+
+	column player_id
+		dataType: string
+		isHidden
+		lineageTag: 9599ea42-2bf0-5745-8898-742439ad1a63
+		summarizeBy: none
+		sourceColumn: player_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_id
+		dataType: string
+		isHidden
+		lineageTag: 2b6eab11-655d-52a0-8960-71dab242fdb9
+		summarizeBy: none
+		sourceColumn: match_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column team
+		dataType: string
+		isHidden
+		lineageTag: 911c457b-1716-52fe-9dc6-d79a48e150e0
+		summarizeBy: none
+		sourceColumn: team
+
+		annotation SummarizationSetBy = Automatic
+
+	column opponent_team
+		dataType: string
+		isHidden
+		lineageTag: 70f169d1-69bb-5771-83f2-c409f6bb1a6b
+		summarizeBy: none
+		sourceColumn: opponent_team
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 51476450-b700-5234-a818-0d1ea81ee460
+		summarizeBy: none
+		sourceColumn: match_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column stadium
+		dataType: string
+		isHidden
+		lineageTag: 14ec30fc-a59b-5771-815e-ce7ea25f811c
+		summarizeBy: none
+		sourceColumn: stadium
+
+		annotation SummarizationSetBy = Automatic
+
+	column result
+		dataType: string
+		isHidden
+		lineageTag: b6379b93-06d8-5404-af62-7653b82424a1
+		summarizeBy: none
+		sourceColumn: result
+
+		annotation SummarizationSetBy = Automatic
+
+	column minutes_played
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 64741107-f01e-50aa-94a3-8d41b85730c1
+		summarizeBy: sum
+		sourceColumn: minutes_played
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ac26060a-4df2-59fb-81b3-21ce4448a261
+		summarizeBy: sum
+		sourceColumn: goals
+
+		annotation SummarizationSetBy = Automatic
+
+	column assists
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a7dfbd5e-c99e-5f17-bc08-ced9706bf503
+		summarizeBy: sum
+		sourceColumn: assists
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e6b80a52-d48c-5f18-a00a-a3a13696a173
+		summarizeBy: sum
+		sourceColumn: shots
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots_on_target
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 74e71645-a23b-563f-a2d8-cfe86eea0395
+		summarizeBy: sum
+		sourceColumn: shots_on_target
+
+		annotation SummarizationSetBy = Automatic
+
+	column key_passes
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8b828494-b867-5a2b-b92a-d4a59a43d92a
+		summarizeBy: sum
+		sourceColumn: key_passes
+
+		annotation SummarizationSetBy = Automatic
+
+	column successful_passes
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ff56b27b-bbc1-53c6-9263-1e6fdee2e4ca
+		summarizeBy: sum
+		sourceColumn: successful_passes
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_passes
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 180132ae-2fa9-54e1-ae87-5dfb218b3b6c
+		summarizeBy: sum
+		sourceColumn: total_passes
+
+		annotation SummarizationSetBy = Automatic
+
+	column dribbles_attempted
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8d186ac1-2357-56ce-aacf-f2b72fba8b0e
+		summarizeBy: sum
+		sourceColumn: dribbles_attempted
+
+		annotation SummarizationSetBy = Automatic
+
+	column successful_dribbles
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6cbfe06d-c88d-5e41-a7f8-e55a3b52d1d1
+		summarizeBy: sum
+		sourceColumn: successful_dribbles
+
+		annotation SummarizationSetBy = Automatic
+
+	column crosses
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 33d3b272-d9ba-5608-bda8-3403a2316909
+		summarizeBy: sum
+		sourceColumn: crosses
+
+		annotation SummarizationSetBy = Automatic
+
+	column successful_crosses
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3def3465-8f77-5857-aaff-5c19ff22aaff
+		summarizeBy: sum
+		sourceColumn: successful_crosses
+
+		annotation SummarizationSetBy = Automatic
+
+	column tackles
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d9423b9f-e3b7-5644-81af-c8091fbecacb
+		summarizeBy: sum
+		sourceColumn: tackles
+
+		annotation SummarizationSetBy = Automatic
+
+	column interceptions
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a3b70afd-be21-52df-8b54-2b8cce15b448
+		summarizeBy: sum
+		sourceColumn: interceptions
+
+		annotation SummarizationSetBy = Automatic
+
+	column clearances
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 33292647-4417-5818-ac65-06a874ca865c
+		summarizeBy: sum
+		sourceColumn: clearances
+
+		annotation SummarizationSetBy = Automatic
+
+	column blocks
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9c599e28-e69f-53ba-83a5-d3f6abdabce6
+		summarizeBy: sum
+		sourceColumn: blocks
+
+		annotation SummarizationSetBy = Automatic
+
+	column aerial_duels_won
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f7f8d6b4-793a-5370-a518-0c6972261ec1
+		summarizeBy: sum
+		sourceColumn: aerial_duels_won
+
+		annotation SummarizationSetBy = Automatic
+
+	column aerial_duels_lost
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a90b9616-72c2-5c4f-afec-c41009854265
+		summarizeBy: sum
+		sourceColumn: aerial_duels_lost
+
+		annotation SummarizationSetBy = Automatic
+
+	column recoveries
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 82773c93-5b24-524e-b718-e00be795f663
+		summarizeBy: sum
+		sourceColumn: recoveries
+
+		annotation SummarizationSetBy = Automatic
+
+	column defensive_actions
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c86b9904-32a5-57f0-8235-0a8506fd3864
+		summarizeBy: sum
+		sourceColumn: defensive_actions
+
+		annotation SummarizationSetBy = Automatic
+
+	column fouls_committed
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7cf17104-e9f5-571b-90e2-8fd86e922619
+		summarizeBy: sum
+		sourceColumn: fouls_committed
+
+		annotation SummarizationSetBy = Automatic
+
+	column fouls_suffered
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4b84d261-2f9f-5527-9a1e-6be8b7a12194
+		summarizeBy: sum
+		sourceColumn: fouls_suffered
+
+		annotation SummarizationSetBy = Automatic
+
+	column yellow_cards
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b9391f2c-6998-5ecd-b3f1-1c9411ee11ad
+		summarizeBy: sum
+		sourceColumn: yellow_cards
+
+		annotation SummarizationSetBy = Automatic
+
+	column red_cards
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a5cd02f9-f30b-5be0-9d55-6f9a7b3e81a2
+		summarizeBy: sum
+		sourceColumn: red_cards
+
+		annotation SummarizationSetBy = Automatic
+
+	column offsides
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5342317f-7fb2-56cc-9ad4-b5c45e135b7a
+		summarizeBy: sum
+		sourceColumn: offsides
+
+		annotation SummarizationSetBy = Automatic
+
+	column saves
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1ab38ed2-c2c2-5751-8431-f64cc7834e54
+		summarizeBy: sum
+		sourceColumn: saves
+
+		annotation SummarizationSetBy = Automatic
+
+	column punches
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: af883689-6cc9-57c1-9efa-c81a27f0f33e
+		summarizeBy: sum
+		sourceColumn: punches
+
+		annotation SummarizationSetBy = Automatic
+
+	column clean_sheet
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 28954e73-5ddd-52f1-ad6d-e25627f38902
+		summarizeBy: sum
+		sourceColumn: clean_sheet
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_conceded
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f19e100b-047f-5dca-b16d-a02b50b99926
+		summarizeBy: sum
+		sourceColumn: goals_conceded
+
+		annotation SummarizationSetBy = Automatic
+
+	column penalty_saves
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2fcb0683-0993-5794-89f9-55472ed12601
+		summarizeBy: sum
+		sourceColumn: penalty_saves
+
+		annotation SummarizationSetBy = Automatic
+
+	column accelerations
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 01caf77e-1cd5-5b39-8df6-c5cf2f8dd9b3
+		summarizeBy: sum
+		sourceColumn: accelerations
+
+		annotation SummarizationSetBy = Automatic
+
+	column decelerations
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 24b20abc-3764-5de9-b277-3406fc68609d
+		summarizeBy: sum
+		sourceColumn: decelerations
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_goals_xg
+		dataType: double
+		isHidden
+		lineageTag: 2d9fad7e-6dee-5ffd-af1d-8c6f1309eb69
+		summarizeBy: sum
+		sourceColumn: expected_goals_xg
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_assists_xa
+		dataType: double
+		isHidden
+		lineageTag: 857f7914-6c4a-5842-becb-74401157664d
+		summarizeBy: sum
+		sourceColumn: expected_assists_xa
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_covered_km
+		dataType: double
+		isHidden
+		lineageTag: 56fe1987-8412-53e5-a3bd-b0ab719250ba
+		summarizeBy: sum
+		sourceColumn: distance_covered_km
+
+		annotation SummarizationSetBy = Automatic
+
+	column sprint_distance_km
+		dataType: double
+		isHidden
+		lineageTag: a5bbc61f-9388-50aa-8656-e699999a3da3
+		summarizeBy: sum
+		sourceColumn: sprint_distance_km
+
+		annotation SummarizationSetBy = Automatic
+
+	column top_speed_kmh
+		dataType: double
+		isHidden
+		lineageTag: 7b1abf02-6e64-5be2-82fa-b093bc6be9d9
+		summarizeBy: sum
+		sourceColumn: top_speed_kmh
+
+		annotation SummarizationSetBy = Automatic
+
+	column stamina_score
+		dataType: double
+		isHidden
+		lineageTag: e3d7d91e-6004-5728-84b2-344e0a326205
+		summarizeBy: sum
+		sourceColumn: stamina_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_rating
+		dataType: double
+		isHidden
+		lineageTag: d1e5573d-a2b1-55f0-af0f-0a6cebc7746c
+		summarizeBy: sum
+		sourceColumn: player_rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column performance_score
+		dataType: double
+		isHidden
+		lineageTag: 7724f2be-8087-5580-894e-b6209faec689
+		summarizeBy: sum
+		sourceColumn: performance_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column offensive_contribution
+		dataType: double
+		isHidden
+		lineageTag: bb7f6f58-52a7-54a2-8cbe-1e067ef09e07
+		summarizeBy: sum
+		sourceColumn: offensive_contribution
+
+		annotation SummarizationSetBy = Automatic
+
+	column defensive_contribution
+		dataType: double
+		isHidden
+		lineageTag: d8112fe0-7960-55ae-ae25-f4ed9cf35583
+		summarizeBy: sum
+		sourceColumn: defensive_contribution
+
+		annotation SummarizationSetBy = Automatic
+
+	column possession_impact
+		dataType: double
+		isHidden
+		lineageTag: d329befa-a0ce-51b3-95dc-6a422eab172f
+		summarizeBy: sum
+		sourceColumn: possession_impact
+
+		annotation SummarizationSetBy = Automatic
+
+	column pressure_resistance
+		dataType: double
+		isHidden
+		lineageTag: 244b2b5e-ab45-599f-9dd8-958b86a9ada0
+		summarizeBy: sum
+		sourceColumn: pressure_resistance
+
+		annotation SummarizationSetBy = Automatic
+
+	column creativity_score
+		dataType: double
+		isHidden
+		lineageTag: 132fe8d6-acbc-548b-b329-cd2f63778a0f
+		summarizeBy: sum
+		sourceColumn: creativity_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column consistency_score
+		dataType: double
+		isHidden
+		lineageTag: 657b41df-dda7-50e7-a4d7-1c23dcd95f69
+		summarizeBy: sum
+		sourceColumn: consistency_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column clutch_performance_score
+		dataType: double
+		isHidden
+		lineageTag: 4b6fed71-7629-5f23-9cec-5bf909f4ebf2
+		summarizeBy: sum
+		sourceColumn: clutch_performance_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_appearance
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6d054055-fc60-5698-9cd1-2f0e25ebd02e
+		summarizeBy: sum
+		sourceColumn: is_appearance
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_PlayerMatch = m
+		mode: import
+		queryGroup: Facts
+		source =
+				let
+				    Source = Raw_PlayerMatch,
+				    // Keep keys + per-match metrics only.
+				    // Dropped on purpose: player/match attributes (live in dimensions), goals_team/goals_opponent (live in Fact_TeamMatch),
+				    // pass_accuracy & save_percentage (inconsistent with their own components - recomputed in DAX),
+				    // total_*_tournament, tournament_rating, player_of_match_awards (not stable per player - unreliable).
+				    Selected = Table.SelectColumns(Source, {"player_id", "match_id", "team", "opponent_team", "match_date", "stadium", "match_result", "minutes_played", "goals", "assists", "shots", "shots_on_target", "key_passes", "successful_passes", "total_passes", "dribbles_attempted", "successful_dribbles", "crosses", "successful_crosses", "tackles", "interceptions", "clearances", "blocks", "aerial_duels_won", "aerial_duels_lost", "recoveries", "defensive_actions", "fouls_committed", "fouls_suffered", "yellow_cards", "red_cards", "offsides", "saves", "punches", "clean_sheet", "goals_conceded", "penalty_saves", "accelerations", "decelerations", "expected_goals_xg", "expected_assists_xa", "distance_covered_km", "sprint_distance_km", "top_speed_kmh", "stamina_score", "player_rating", "performance_score", "offensive_contribution", "defensive_contribution", "possession_impact", "pressure_resistance", "creativity_score", "consistency_score", "clutch_performance_score"}),
+				    Renamed = Table.RenameColumns(Selected, {{"match_result", "result"}}),
+				    // 1 = the player actually played (minutes > 0). 42% of rows are unused substitutes.
+				    AddAppearance = Table.AddColumn(Renamed, "is_appearance", each if [minutes_played] > 0 then 1 else 0, Int64.Type)
+				in
+				    AddAppearance
+
+	annotation PBI_ResultType = Table
+

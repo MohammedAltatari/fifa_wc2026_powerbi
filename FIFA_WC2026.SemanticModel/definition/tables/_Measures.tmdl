@@ -1,0 +1,738 @@
+/// Home table for all DAX measures (no data).
+table _Measures
+	lineageTag: 3144a911-13ee-51a0-98d0-2c6b76ee9b4b
+
+	/// Number of matches in the current filter context.
+	measure Matches = DISTINCTCOUNT ( Fact_TeamMatch[match_id] )
+		formatString: #,0
+		displayFolder: 1 Tournament
+		lineageTag: f84c24b1-55b6-5958-b3ac-401437415a1b
+
+	/// Official goals from the match score (goals_team). Use this, not player goals, for team/tournament totals.
+	measure 'Total Goals' = SUM ( Fact_TeamMatch[goals_for] )
+		formatString: #,0
+		displayFolder: 1 Tournament
+		lineageTag: faffe2fe-aca0-5b36-9f9f-5dcdff535f06
+
+	/// Goals scored per match in the current context (both teams when unfiltered).
+	measure 'Goals per Match' = DIVIDE ( [Total Goals], [Matches] )
+		formatString: 0.00
+		displayFolder: 1 Tournament
+		lineageTag: 8c44bcd0-601a-5214-b2bd-bbdbe9fbd879
+
+	/// Distinct players with at least one minute on the pitch.
+	measure 'Players Used' = CALCULATE ( DISTINCTCOUNT ( Fact_PlayerMatch[player_id] ), Fact_PlayerMatch[is_appearance] = 1 )
+		formatString: #,0
+		displayFolder: 1 Tournament
+		lineageTag: cd4acf4b-dd54-5b9e-bdac-8757f2083e4a
+
+	/// Average match rating, appearances only (unused substitutes have rating 0 and are excluded).
+	measure 'Avg Player Rating' = CALCULATE ( AVERAGE ( Fact_PlayerMatch[player_rating] ), Fact_PlayerMatch[is_appearance] = 1 )
+		formatString: 0.00
+		displayFolder: 1 Tournament
+		lineageTag: 7e672761-2faa-58e4-b47e-59a5e0a4a54e
+
+	/// Share of matches that ended in a draw.
+	measure 'Draw Rate' = DIVIDE ( CALCULATE ( [Matches], Fact_TeamMatch[result] = "D" ), [Matches] )
+		formatString: 0.0%
+		displayFolder: 1 Tournament
+		lineageTag: 915c4b56-6b61-5d80-ac8a-057137675e22
+
+	/// Text for a card on every page.
+	measure 'Data Disclaimer' = "Simulated data - not official FIFA World Cup 2026 results"
+		displayFolder: 1 Tournament
+		lineageTag: aad42e25-7cc1-5696-9a81-ad78d7c2a4b4
+
+	/// Team-match rows (each match counts once per team).
+	measure 'Team Matches' = COUNTROWS ( Fact_TeamMatch )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: a1017299-058e-58ec-a6b1-4d8b0d588eec
+
+	measure Wins = CALCULATE ( [Team Matches], Fact_TeamMatch[result] = "W" )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: d5125771-5431-5170-8ca5-5ab54404628e
+
+	measure Draws = CALCULATE ( [Team Matches], Fact_TeamMatch[result] = "D" )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: 8eb4b6b0-d50c-5862-8de1-6ac920f765e2
+
+	measure Losses = CALCULATE ( [Team Matches], Fact_TeamMatch[result] = "L" )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: 99add831-b407-5da2-96f5-61874357e245
+
+	/// Wins / matches played. Teams played 33-66 matches, so compare rates, not totals.
+	measure 'Win %' = DIVIDE ( [Wins], [Team Matches] )
+		formatString: 0.0%
+		displayFolder: 2 Teams
+		lineageTag: c4fb7d92-44cc-5146-b013-c9f89273c471
+
+	/// 3 for a win, 1 for a draw.
+	measure Points = SUM ( Fact_TeamMatch[points] )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: 90f5b5ef-19f5-5c19-9110-e8aa916f9f57
+
+	measure 'Points per Match' = DIVIDE ( [Points], [Team Matches] )
+		formatString: 0.00
+		displayFolder: 2 Teams
+		lineageTag: 49866434-47b1-5078-80e5-7d2cd6e56043
+
+	measure 'Goals For' = SUM ( Fact_TeamMatch[goals_for] )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: 7729d803-7480-5afb-831d-9be95747fe9d
+
+	measure 'Goals Against' = SUM ( Fact_TeamMatch[goals_against] )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: 282f8e50-0633-5794-90ed-e8a6ba058f4b
+
+	measure 'Goal Difference' = [Goals For] - [Goals Against]
+		formatString: +#,0;-#,0;0
+		displayFolder: 2 Teams
+		lineageTag: 44e391e1-281b-544d-9846-fafbc5440818
+
+	measure 'Goals For per Match' = DIVIDE ( [Goals For], [Team Matches] )
+		formatString: 0.00
+		displayFolder: 2 Teams
+		lineageTag: d4b4803f-3dcf-51ec-85d1-26b9798b5099
+
+	measure 'Goals Against per Match' = DIVIDE ( [Goals Against], [Team Matches] )
+		formatString: 0.00
+		displayFolder: 2 Teams
+		lineageTag: 2e2d5037-efff-508f-bc86-8676065b4a28
+
+	/// Sum of player xG in the team's matches.
+	measure 'Team xG' = SUM ( Fact_TeamMatch[xg_for] )
+		formatString: #,0.0
+		displayFolder: 2 Teams
+		lineageTag: 010d580d-da0d-543f-bd28-1371b29ac0de
+
+	measure 'Team xG Against' = SUM ( Fact_TeamMatch[xg_against] )
+		formatString: #,0.0
+		displayFolder: 2 Teams
+		lineageTag: 7ee33cd1-53c4-5fbd-89de-9ccd962a0d8b
+
+	measure 'Team xG per Match' = DIVIDE ( [Team xG], [Team Matches] )
+		formatString: 0.00
+		displayFolder: 2 Teams
+		lineageTag: a21710a1-7203-54a1-8ca4-c40ea019fc34
+
+	/// Positive = scored more than expected. Note: xG in this dataset is ~3x lower than goals, so use it for ranking, not absolute finishing skill.
+	measure 'Goals minus xG' = [Goals For] - [Team xG]
+		formatString: +#,0.0;-#,0.0;0.0
+		displayFolder: 2 Teams
+		lineageTag: 4bab87f6-a5b6-5309-9b00-51947e9db986
+
+	measure 'Goals to xG Ratio' = DIVIDE ( [Goals For], [Team xG] )
+		formatString: 0.00
+		displayFolder: 2 Teams
+		lineageTag: df4c1aef-d629-5b86-9df9-51d78070abc6
+
+	measure 'Team Shots per Match' = DIVIDE ( SUM ( Fact_TeamMatch[shots_for] ), [Team Matches] )
+		formatString: 0.0
+		displayFolder: 2 Teams
+		lineageTag: 5927fbab-2fde-58db-a15f-47c70c98e5c1
+
+	/// Matches where the team conceded 0 (from the match score).
+	measure 'Team Clean Sheets' = CALCULATE ( [Team Matches], Fact_TeamMatch[goals_against] = 0 )
+		formatString: #,0
+		displayFolder: 2 Teams
+		lineageTag: 78bdda2e-3196-5a51-964c-76c7ba4209dc
+
+	measure 'Clean Sheet %' = DIVIDE ( [Team Clean Sheets], [Team Matches] )
+		formatString: 0.0%
+		displayFolder: 2 Teams
+		lineageTag: e5874af0-4738-5825-b5c6-59a1cbb7b709
+
+	/// Matches in which the player played at least one minute.
+	measure Appearances = CALCULATE ( COUNTROWS ( Fact_PlayerMatch ), Fact_PlayerMatch[is_appearance] = 1 )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 341d9384-2b4a-5c24-9921-800bc71d85b6
+
+	measure 'Minutes Played' = SUM ( Fact_PlayerMatch[minutes_played] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 323d0d91-8132-5a7a-8284-a08cd42f9191
+
+	measure 'Avg Minutes per Appearance' = DIVIDE ( [Minutes Played], [Appearances] )
+		formatString: 0
+		displayFolder: 3 Players
+		lineageTag: 5f036b3a-9583-50ad-9173-b64a39472708
+
+	/// Goals credited to players. Does not always equal the match score - use [Total Goals] for team totals.
+	measure Goals = SUM ( Fact_PlayerMatch[goals] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 4768181a-c1b5-5a7b-9dee-bd5cb57a2eec
+
+	measure Assists = SUM ( Fact_PlayerMatch[assists] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: d7cd2c4e-119b-57cc-ae33-3f3b2d51786d
+
+	/// Goals + assists.
+	measure 'Goal Contributions' = [Goals] + [Assists]
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 56465bad-87fa-5fc0-9706-eee110405844
+
+	measure Shots = SUM ( Fact_PlayerMatch[shots] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 7519c1e5-e40b-51fd-b776-18238253d340
+
+	measure 'Shots on Target' = SUM ( Fact_PlayerMatch[shots_on_target] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: db5e23b6-a932-56a4-9b3c-d33278acf569
+
+	measure 'Shot Accuracy %' = DIVIDE ( [Shots on Target], [Shots] )
+		formatString: 0.0%
+		displayFolder: 3 Players
+		lineageTag: f62e520c-230f-59ae-b95d-2a93208b18ca
+
+	/// Goals per shot.
+	measure 'Conversion %' = DIVIDE ( [Goals], [Shots] )
+		formatString: 0.0%
+		displayFolder: 3 Players
+		lineageTag: ada04e1f-6bcc-5524-a718-e7461c02817b
+
+	measure xG = SUM ( Fact_PlayerMatch[expected_goals_xg] )
+		formatString: #,0.00
+		displayFolder: 3 Players
+		lineageTag: 56379171-0e9c-57b7-92c0-37ca87f2b37b
+
+	measure xA = SUM ( Fact_PlayerMatch[expected_assists_xa] )
+		formatString: #,0.00
+		displayFolder: 3 Players
+		lineageTag: 05303280-366e-571f-b558-18082934f853
+
+	measure 'Player Goals minus xG' = [Goals] - [xG]
+		formatString: +#,0.00;-#,0.00;0.00
+		displayFolder: 3 Players
+		lineageTag: 90790f0a-eac0-5fb3-a179-2479b13ab71e
+
+	measure 'Key Passes' = SUM ( Fact_PlayerMatch[key_passes] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 677156b6-9707-56df-98f3-6e46c9779d8f
+
+	/// Recomputed from passes (the source pass_accuracy column is inconsistent).
+	measure 'Pass Accuracy %' = DIVIDE ( SUM ( Fact_PlayerMatch[successful_passes] ), SUM ( Fact_PlayerMatch[total_passes] ) )
+		formatString: 0.0%
+		displayFolder: 3 Players
+		lineageTag: 29088c6b-9aff-5163-8fa3-cfec7d344968
+
+	measure 'Dribble Success %' = DIVIDE ( SUM ( Fact_PlayerMatch[successful_dribbles] ), SUM ( Fact_PlayerMatch[dribbles_attempted] ) )
+		formatString: 0.0%
+		displayFolder: 3 Players
+		lineageTag: 28d3c414-6c2d-51ee-93e2-b74349e58556
+
+	measure 'Cross Accuracy %' = DIVIDE ( SUM ( Fact_PlayerMatch[successful_crosses] ), SUM ( Fact_PlayerMatch[crosses] ) )
+		formatString: 0.0%
+		displayFolder: 3 Players
+		lineageTag: 928d11e9-7658-5b53-9b5c-81e7c162a6c2
+
+	measure Tackles = SUM ( Fact_PlayerMatch[tackles] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 1f8f9890-90b9-5fd4-a54f-a8570a02be9f
+
+	measure Interceptions = SUM ( Fact_PlayerMatch[interceptions] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 67fff235-9e68-57a4-891a-f7957da77bc3
+
+	measure 'Defensive Actions' = SUM ( Fact_PlayerMatch[defensive_actions] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 05ee15fb-e315-5f3d-b51f-b09990d7d6be
+
+	measure 'Aerial Duel Win %' =
+			VAR Won = SUM ( Fact_PlayerMatch[aerial_duels_won] )
+			VAR Lost = SUM ( Fact_PlayerMatch[aerial_duels_lost] )
+			RETURN
+			    DIVIDE ( Won, Won + Lost )
+		formatString: 0.0%
+		displayFolder: 3 Players
+		lineageTag: 0cf92fdf-c3a9-5ef3-b706-7cc28f65d607
+
+	measure 'Yellow Cards' = SUM ( Fact_PlayerMatch[yellow_cards] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: e75dccee-ef4a-589b-9ac5-86e697dea8a2
+
+	measure 'Red Cards' = SUM ( Fact_PlayerMatch[red_cards] )
+		formatString: #,0
+		displayFolder: 3 Players
+		lineageTag: 18c17469-e67e-5759-8c66-3d57575c2f64
+
+	measure 'Avg Performance Score' = CALCULATE ( AVERAGE ( Fact_PlayerMatch[performance_score] ), Fact_PlayerMatch[is_appearance] = 1 )
+		formatString: 0.0
+		displayFolder: 3 Players
+		lineageTag: c5f3085e-de6a-5602-b80d-7d4f32cc1755
+
+	/// Title text for the Player Profile page.
+	measure 'Selected Player' = SELECTEDVALUE ( Dim_Player[Player Label], "Select a player" )
+		displayFolder: 3 Players
+		lineageTag: 47d2d656-9f5f-543c-b5a9-a2cbe1dbc407
+
+	measure Saves = SUM ( Fact_PlayerMatch[saves] )
+		formatString: #,0
+		displayFolder: 4 Goalkeeping
+		lineageTag: 02649002-59c0-5696-be45-98ab3748ba71
+
+	/// Goals conceded while the goalkeeper was on the pitch.
+	measure 'Goals Conceded (GK)' = SUM ( Fact_PlayerMatch[goals_conceded] )
+		formatString: #,0
+		displayFolder: 4 Goalkeeping
+		lineageTag: 3f429d85-4c34-5b69-bf92-def10d5ac0d4
+
+	/// Recomputed (the source save_percentage column is inconsistent).
+	measure 'Save %' = DIVIDE ( [Saves], [Saves] + [Goals Conceded (GK)] )
+		formatString: 0.0%
+		displayFolder: 4 Goalkeeping
+		lineageTag: b15740c4-b0c2-539e-8bee-6cbacde4cec2
+
+	measure 'GK Clean Sheets' = SUM ( Fact_PlayerMatch[clean_sheet] )
+		formatString: #,0
+		displayFolder: 4 Goalkeeping
+		lineageTag: 29b04c62-953e-5ebd-a688-52296de30314
+
+	measure 'Penalty Saves' = SUM ( Fact_PlayerMatch[penalty_saves] )
+		formatString: #,0
+		displayFolder: 4 Goalkeeping
+		lineageTag: 32bb3b75-2b7f-5b9d-b04a-4083dcf732c5
+
+	/// Goals per 90 minutes played. Pair with [Is Qualified] to hide small samples.
+	measure 'Goals per 90' = DIVIDE ( [Goals] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: ace6fd45-2cde-51aa-a30c-58d314898cd3
+
+	measure 'Assists per 90' = DIVIDE ( [Assists] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: b75ababe-9aea-5b76-bc08-93452667f3e8
+
+	measure 'Goal Contributions per 90' = DIVIDE ( [Goal Contributions] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: fbb00448-5570-55f0-ba4f-cc7ad52fd4a5
+
+	measure 'xG per 90' = DIVIDE ( [xG] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: d17c7619-963b-5769-bc9b-f3791acb55ba
+
+	measure 'xA per 90' = DIVIDE ( [xA] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: 88ca855f-a177-51bb-a5ed-d15d3a961026
+
+	measure 'Shots per 90' = DIVIDE ( [Shots] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: 710ceba4-4612-5dff-89e9-fb0599e09e7a
+
+	measure 'Key Passes per 90' = DIVIDE ( [Key Passes] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: 3f046574-17db-5a66-81f7-46f77e743068
+
+	measure 'Defensive Actions per 90' = DIVIDE ( [Defensive Actions] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: 8e56b4a1-1a2e-543c-922f-839518d205ea
+
+	measure 'Tackles + Interceptions per 90' = DIVIDE ( ( [Tackles] + [Interceptions] ) * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: 15083af0-867a-5c06-bbab-b917d2265191
+
+	measure 'Saves per 90' = DIVIDE ( [Saves] * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 5 Per 90
+		lineageTag: f92c28e7-0d8e-5638-b6a3-a8131b11a43c
+
+	/// Minimum minutes for per-90 rankings (slicer on Param_MinMinutes, default 900 = 10 full matches; every player has 472+ minutes, so lower values filter nothing).
+	measure 'Min Minutes Value' = SELECTEDVALUE ( Param_MinMinutes[Min Minutes], 900 )
+		formatString: #,0
+		displayFolder: 5 Per 90
+		lineageTag: 26e5faa8-0bb2-5aa7-9565-d53bfb5ab4cd
+
+	/// 1 if the player reached the minimum minutes. Use as a visual filter (Is Qualified = 1).
+	measure 'Is Qualified' = IF ( [Minutes Played] >= [Min Minutes Value] && [Minutes Played] > 0, 1, 0 )
+		formatString: 0
+		displayFolder: 5 Per 90
+		lineageTag: 6e924dbc-f1a6-5a92-a81b-c1cd363b4f1c
+
+	measure 'Distance per 90 (km)' = DIVIDE ( SUM ( Fact_PlayerMatch[distance_covered_km] ) * 90, [Minutes Played] )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: b27a7c09-07c6-5560-b04d-b9500314158f
+
+	measure 'Avg Distance per Appearance (km)' = DIVIDE ( SUM ( Fact_PlayerMatch[distance_covered_km] ), [Appearances] )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: efe12562-fa7a-5e74-9d1e-38b5f2bbbf9a
+
+	measure 'Sprint Distance per 90 (km)' = DIVIDE ( SUM ( Fact_PlayerMatch[sprint_distance_km] ) * 90, [Minutes Played] )
+		formatString: 0.00
+		displayFolder: 6 Physical
+		lineageTag: 48ccecc4-5caf-5e3e-8dc2-6a4ff747492b
+
+	measure 'Avg Top Speed (km/h)' = CALCULATE ( AVERAGE ( Fact_PlayerMatch[top_speed_kmh] ), Fact_PlayerMatch[is_appearance] = 1 )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: 2b989151-4ff4-5399-aa9f-ca8b29b78a18
+
+	measure 'Max Top Speed (km/h)' = MAX ( Fact_PlayerMatch[top_speed_kmh] )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: 379f2f44-8763-5934-9f4d-81b090c9a5f7
+
+	measure 'Accelerations per 90' = DIVIDE ( SUM ( Fact_PlayerMatch[accelerations] ) * 90, [Minutes Played] )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: c804869e-2a34-53bb-813e-dd3d127cb567
+
+	measure 'Decelerations per 90' = DIVIDE ( SUM ( Fact_PlayerMatch[decelerations] ) * 90, [Minutes Played] )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: 07785902-a8c2-5f98-81f9-5245eaa2b113
+
+	/// Appearances only (unused substitutes still carry a stamina score in the source).
+	measure 'Avg Stamina Score' = CALCULATE ( AVERAGE ( Fact_PlayerMatch[stamina_score] ), Fact_PlayerMatch[is_appearance] = 1 )
+		formatString: 0.0
+		displayFolder: 6 Physical
+		lineageTag: d260ce3d-3abd-5d2e-b90d-75b2b9550ecd
+
+	/// Total market value (EUR millions) of the players in context. Works with team, match and player filters.
+	measure 'Market Value (EUR M)' =
+			DIVIDE (
+			    CALCULATE (
+			        SUM ( Dim_Player[market_value_eur] ),
+			        TREATAS ( VALUES ( Fact_PlayerMatch[player_id] ), Dim_Player[player_id] )
+			    ),
+			    1000000
+			)
+		formatString: #,0.0
+		displayFolder: 7 Value
+		lineageTag: 6b93ce1a-ba4e-55d9-a2aa-45a3000d7b95
+
+	measure 'Avg Market Value (EUR M)' =
+			DIVIDE (
+			    CALCULATE (
+			        AVERAGE ( Dim_Player[market_value_eur] ),
+			        TREATAS ( VALUES ( Fact_PlayerMatch[player_id] ), Dim_Player[player_id] )
+			    ),
+			    1000000
+			)
+		formatString: #,0.0
+		displayFolder: 7 Value
+		lineageTag: 3a436a86-88ff-5c8d-99d3-0f7be30ce066
+
+	/// Share of qualified players (in the current selection) with a lower average rating. 100% = best.
+	measure 'Rating Percentile' =
+			VAR MinMins = [Min Minutes Value]
+			VAR CurrentValue = [Avg Player Rating]
+			VAR Pool =
+			    CALCULATETABLE (
+			        FILTER (
+			            ADDCOLUMNS (
+			                VALUES ( Dim_Player[player_id] ),
+			                "@Value", [Avg Player Rating],
+			                "@Minutes", [Minutes Played]
+			            ),
+			            [@Minutes] >= MinMins && [@Minutes] > 0
+			        ),
+			        ALLSELECTED ( Dim_Player )
+			    )
+			VAR PoolSize = COUNTROWS ( Pool )
+			VAR Below = COUNTROWS ( FILTER ( Pool, [@Value] < CurrentValue ) )
+			RETURN
+			    IF (
+			        HASONEVALUE ( Dim_Player[player_id] ) && [Is Qualified] = 1 && PoolSize > 1,
+			        DIVIDE ( Below, PoolSize - 1 )
+			    )
+		formatString: 0%
+		displayFolder: 7 Value
+		lineageTag: 32e7c405-02a3-5025-a5c8-720204489ed6
+
+	/// Share of qualified players (in the current selection) with a lower market value. 100% = most expensive.
+	measure 'Value Percentile' =
+			VAR MinMins = [Min Minutes Value]
+			VAR CurrentValue = [Market Value (EUR M)]
+			VAR Pool =
+			    CALCULATETABLE (
+			        FILTER (
+			            ADDCOLUMNS (
+			                VALUES ( Dim_Player[player_id] ),
+			                "@Value", [Market Value (EUR M)],
+			                "@Minutes", [Minutes Played]
+			            ),
+			            [@Minutes] >= MinMins && [@Minutes] > 0
+			        ),
+			        ALLSELECTED ( Dim_Player )
+			    )
+			VAR PoolSize = COUNTROWS ( Pool )
+			VAR Below = COUNTROWS ( FILTER ( Pool, [@Value] < CurrentValue ) )
+			RETURN
+			    IF (
+			        HASONEVALUE ( Dim_Player[player_id] ) && [Is Qualified] = 1 && PoolSize > 1,
+			        DIVIDE ( Below, PoolSize - 1 )
+			    )
+		formatString: 0%
+		displayFolder: 7 Value
+		lineageTag: 5356feb7-f8ee-574e-bee6-582e89366527
+
+	/// Rating percentile minus value percentile. Positive = performs better than the price suggests (a bargain).
+	measure 'Bargain Gap' = [Rating Percentile] - [Value Percentile]
+		formatString: +0%;-0%;0%
+		displayFolder: 7 Value
+		lineageTag: 7941b1f3-5f36-5053-aaea-48bf5a6b5dea
+
+	/// Pearson correlation between market value and average rating across qualified players. Near 0 = price does not predict performance.
+	measure 'Value vs Rating Correlation' =
+			VAR MinMins = [Min Minutes Value]
+			VAR Players =
+			    FILTER (
+			        ADDCOLUMNS (
+			            VALUES ( Fact_PlayerMatch[player_id] ),
+			            "@x", [Market Value (EUR M)],
+			            "@y", [Avg Player Rating],
+			            "@m", [Minutes Played]
+			        ),
+			        [@m] >= MinMins && [@m] > 0 && NOT ISBLANK ( [@y] )
+			    )
+			VAR PlayerCount = COUNTROWS ( Players )
+			VAR MeanX = AVERAGEX ( Players, [@x] )
+			VAR MeanY = AVERAGEX ( Players, [@y] )
+			VAR Covariance = SUMX ( Players, ( [@x] - MeanX ) * ( [@y] - MeanY ) )
+			VAR VarianceX = SUMX ( Players, ( [@x] - MeanX ) ^ 2 )
+			VAR VarianceY = SUMX ( Players, ( [@y] - MeanY ) ^ 2 )
+			RETURN
+			    IF ( PlayerCount > 2, DIVIDE ( Covariance, SQRT ( VarianceX * VarianceY ) ) )
+		formatString: 0.00
+		displayFolder: 7 Value
+		lineageTag: 2e077d76-e198-5b35-9dd1-9ae93618b80b
+
+	/// Value of the metric selected from Comparison_Metrics, in the current filter context.
+	measure 'Metric Value' =
+			SWITCH (
+			    SELECTEDVALUE ( Comparison_Metrics[Metric] ),
+			        "Appearances", [Appearances],
+			        "Minutes Played", [Minutes Played],
+			        "Avg Player Rating", [Avg Player Rating],
+			        "Market Value (EUR M)", [Market Value (EUR M)],
+			        "Goals", [Goals],
+			        "Assists", [Assists],
+			        "Goals per 90", [Goals per 90],
+			        "Assists per 90", [Assists per 90],
+			        "xG per 90", [xG per 90],
+			        "xA per 90", [xA per 90],
+			        "Shots per 90", [Shots per 90],
+			        "Shot Accuracy %", [Shot Accuracy %],
+			        "Conversion %", [Conversion %],
+			        "Key Passes per 90", [Key Passes per 90],
+			        "Pass Accuracy %", [Pass Accuracy %],
+			        "Dribble Success %", [Dribble Success %],
+			        "Defensive Actions per 90", [Defensive Actions per 90],
+			        "Tackles + Interceptions per 90", [Tackles + Interceptions per 90],
+			        "Aerial Duel Win %", [Aerial Duel Win %],
+			        "Distance per 90 (km)", [Distance per 90 (km)],
+			        "Avg Top Speed (km/h)", [Avg Top Speed (km/h)],
+			        "Avg Stamina Score", [Avg Stamina Score],
+			        "Saves per 90", [Saves per 90],
+			        "Save %", [Save %]
+			)
+		displayFolder: 8 Comparison
+		lineageTag: 8d294d13-e0bd-5ee4-a5cd-38fa5a113b9a
+
+		formatStringDefinition = SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" )
+
+	/// Metric value for the player picked in the Player A slicer.
+	measure 'Player A Value' =
+			IF (
+			    HASONEVALUE ( Compare_Player_A[player_id] ),
+			    CALCULATE (
+			        [Metric Value],
+			        REMOVEFILTERS ( Dim_Player ),
+			        REMOVEFILTERS ( Dim_Team ),
+			        TREATAS ( VALUES ( Compare_Player_A[player_id] ), Dim_Player[player_id] )
+			    )
+			)
+		displayFolder: 8 Comparison
+		lineageTag: b78f8919-1d4c-5005-ad59-a7ef22575708
+
+		formatStringDefinition = SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" )
+
+	/// Formatted text version for tables.
+	measure 'Player A Display' =
+			VAR v = [Player A Value]
+			RETURN
+			    IF ( NOT ISBLANK ( v ), FORMAT ( v, SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" ) ) )
+		displayFolder: 8 Comparison
+		lineageTag: 454773d9-0ed5-5766-b3bc-e87f11300dbc
+
+	measure 'Player A Name' = SELECTEDVALUE ( Compare_Player_A[Player A], "Select Player A" )
+		displayFolder: 8 Comparison
+		lineageTag: 3c06199e-6733-591a-b6f4-c02acc367806
+
+	/// Metric value for the player picked in the Player B slicer.
+	measure 'Player B Value' =
+			IF (
+			    HASONEVALUE ( Compare_Player_B[player_id] ),
+			    CALCULATE (
+			        [Metric Value],
+			        REMOVEFILTERS ( Dim_Player ),
+			        REMOVEFILTERS ( Dim_Team ),
+			        TREATAS ( VALUES ( Compare_Player_B[player_id] ), Dim_Player[player_id] )
+			    )
+			)
+		displayFolder: 8 Comparison
+		lineageTag: 8a13f99b-61ab-5fe8-bcea-3469ff23edc1
+
+		formatStringDefinition = SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" )
+
+	/// Formatted text version for tables.
+	measure 'Player B Display' =
+			VAR v = [Player B Value]
+			RETURN
+			    IF ( NOT ISBLANK ( v ), FORMAT ( v, SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" ) ) )
+		displayFolder: 8 Comparison
+		lineageTag: 3916b570-e6c0-5c9a-bc9b-aa835cdee43a
+
+	measure 'Player B Name' = SELECTEDVALUE ( Compare_Player_B[Player B], "Select Player B" )
+		displayFolder: 8 Comparison
+		lineageTag: 14f8e9e4-f755-527d-9fa1-caf89b83b3cb
+
+	/// 1 = Player A is better on this metric, -1 = Player B, 0 = equal. Use for conditional formatting.
+	measure 'Comparison Edge' =
+			VAR Fmt = SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" )
+			VAR Decimals =
+			    SWITCH ( Fmt, "#,0", 0, "0.0", 1, "#,0.0", 1, "0.00", 2, "0.0%", 3, 2 )
+			VAR a = ROUND ( [Player A Value], Decimals )
+			VAR b = ROUND ( [Player B Value], Decimals )
+			VAR HigherIsBetter = SELECTEDVALUE ( Comparison_Metrics[Higher Is Better], 1 )
+			RETURN
+			    IF (
+			        ISBLANK ( [Player A Value] ) || ISBLANK ( [Player B Value] ) || a = b,
+			        0,
+			        IF ( ( a > b ) = ( HigherIsBetter = 1 ), 1, -1 )
+			    )
+		formatString: 0
+		displayFolder: 8 Comparison
+		lineageTag: cba67756-991c-5ffd-a778-4e150a2bca77
+
+	/// Benchmark for the Player Profile page: the same metric for all players in the selected player's position (rates pooled; totals averaged per player).
+	measure 'Position Avg Value' =
+			VAR Pos = SELECTEDVALUE ( Dim_Player[position] )
+			VAR IsRate = SELECTEDVALUE ( Comparison_Metrics[Is Rate], 1 )
+			VAR PositionTotal =
+			    CALCULATE ( [Metric Value], REMOVEFILTERS ( Dim_Player ), REMOVEFILTERS ( Dim_Team ), Dim_Player[position] = Pos )
+			VAR PositionPlayers =
+			    CALCULATE ( [Players Used], REMOVEFILTERS ( Dim_Player ), REMOVEFILTERS ( Dim_Team ), Dim_Player[position] = Pos )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( Pos ),
+			        IF ( IsRate = 1, PositionTotal, DIVIDE ( PositionTotal, PositionPlayers ) )
+			    )
+		displayFolder: 8 Comparison
+		lineageTag: 51bb5624-834a-5290-a6af-740a9543de38
+
+		formatStringDefinition = SELECTEDVALUE ( Comparison_Metrics[Format], "0.00" )
+
+	/// How far the player is above (+) or below (-) the position benchmark.
+	measure 'Vs Position Avg %' = DIVIDE ( [Metric Value] - [Position Avg Value], [Position Avg Value] )
+		formatString: +0%;-0%;0%
+		displayFolder: 8 Comparison
+		lineageTag: 9e9b1327-b2b0-5b55-ab4f-a0b102b10987
+
+	/// Arrow pointing to the better player on the selected metric (comparison table).
+	measure 'Edge Label' = SWITCH ( [Comparison Edge], 1, "A", -1, "B", "=" )
+		displayFolder: 8 Comparison
+		lineageTag: 094f77e0-e68f-5e17-acad-7a1ad47f8865
+
+	/// Players who reached the minimum minutes in the current selection.
+	measure 'Qualified Players' = COUNTROWS ( FILTER ( VALUES ( Dim_Player[player_id] ), [Is Qualified] = 1 ) )
+		formatString: #,0
+		displayFolder: 5 Per 90
+		lineageTag: 17788ce8-8eac-5df0-af5e-d89f5ed6bf81
+
+	/// Player(s) with the most goals in the current selection.
+	measure 'Top Scorer' =
+			VAR Best =
+			    TOPN ( 1, VALUES ( Dim_Player[Player Label] ), [Goals], DESC )
+			RETURN
+			    CONCATENATEX ( Best, Dim_Player[Player Label], ", " )
+		displayFolder: 1 Tournament
+		lineageTag: 4bdc1eb7-8a77-5e77-ae40-94e6ccafd2f9
+
+	/// Goals of the top scorer in the current selection.
+	measure 'Top Scorer Goals' = MAXX ( VALUES ( Dim_Player[player_id] ), [Goals] )
+		formatString: #,0
+		displayFolder: 1 Tournament
+		lineageTag: 36c08c69-b5b1-52ac-a103-07a7be39a77a
+
+	/// One-line player card for the Player Profile page.
+	measure 'Player Info' =
+			IF (
+			    HASONEVALUE ( Dim_Player[player_id] ),
+			    SELECTEDVALUE ( Dim_Player[team] ) & "  |  " & SELECTEDVALUE ( Dim_Player[position] )
+			        & "  |  Age " & SELECTEDVALUE ( Dim_Player[age] )
+			        & "  |  " & SELECTEDVALUE ( Dim_Player[club_name] )
+			        & "  |  " & SELECTEDVALUE ( Dim_Player[height_cm] ) & " cm"
+			        & "  |  " & SELECTEDVALUE ( Dim_Player[preferred_foot] ) & " foot",
+			    BLANK ()
+			)
+		displayFolder: 3 Players
+		lineageTag: dea6be7c-5a8c-5704-80fb-75539ab27648
+
+	/// Goals, with assists then goals per 90 as tie-breakers. Used by the Top 10 scorers filter so exactly 10 players show.
+	measure 'Scorer Rank Value' = [Goals] + DIVIDE ( [Assists], 100 ) + DIVIDE ( [Goals per 90], 10000 )
+		formatString: 0.0000
+		displayFolder: 1 Tournament
+		lineageTag: a8838058-50a0-500d-bd53-37e122f63cc5
+
+	/// Market value only for players above the minimum minutes (blank otherwise) - used as scatter X so small samples drop out.
+	measure 'Qualified Market Value (EUR M)' = IF ( [Is Qualified] = 1, [Market Value (EUR M)] )
+		formatString: #,0.0
+		displayFolder: 7 Value
+		lineageTag: 3976ce34-f983-5afc-9691-86374649a2c4
+
+	/// Average rating only for players above the minimum minutes (blank otherwise) - used as scatter Y.
+	measure 'Qualified Avg Rating' = IF ( [Is Qualified] = 1, [Avg Player Rating] )
+		formatString: 0.00
+		displayFolder: 7 Value
+		lineageTag: 3c8d7680-562e-5147-9e2d-5a035a3c0525
+
+	column Dummy
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a82629cf-9a12-5a9f-b795-319a4ecc9de9
+		summarizeBy: none
+		sourceColumn: Dummy
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		queryGroup: Helpers
+		source =
+				let
+				    // Empty home table for all DAX measures
+				    Source = #table(type table [Dummy = Int64.Type], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,52 @@
+/// Disconnected player list for the Player A slicer (comparison page).
+table Compare_Player_A
+	lineageTag: ff6c44b1-ea1d-5e4b-80ef-5425daef2e78
+
+	column player_id
+		dataType: string
+		isHidden
+		lineageTag: def14deb-66e9-5bfd-81a9-ce0039dd496e
+		summarizeBy: none
+		sourceColumn: player_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Player A'
+		dataType: string
+		lineageTag: 7caa2e38-13cc-5154-b664-cdbcb8d3c9f6
+		summarizeBy: none
+		sourceColumn: Player A
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Team A'
+		dataType: string
+		lineageTag: 9f55942a-b5c3-5b12-a523-fa22b4963d22
+		summarizeBy: none
+		sourceColumn: Team A
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Position A'
+		dataType: string
+		lineageTag: 23f40ef6-78e2-5d2d-8c85-c1f39b50fb91
+		summarizeBy: none
+		sourceColumn: Position A
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Compare_Player_A = m
+		mode: import
+		queryGroup: Helpers
+		source =
+				let
+				    Source = Dim_Player,
+				    // Disconnected copy of the player list: drives the "A" slicer on the comparison page
+				    Selected = Table.SelectColumns(Source, {"player_id", "Player Label", "team", "position"}),
+				    Renamed = Table.RenameColumns(Selected, {{"Player Label", "Player A"}, {"team", "Team A"}, {"position", "Position A"}}),
+				    Sorted = Table.Sort(Renamed, {{"Player A", Order.Ascending}})
+				in
+				    Sorted
+
+	annotation PBI_ResultType = Table
+

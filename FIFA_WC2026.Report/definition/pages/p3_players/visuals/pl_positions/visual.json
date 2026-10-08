@@ -1,0 +1,183 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "pl_positions",
+  "position": {
+    "x": 648,
+    "y": 480,
+    "z": 1000,
+    "height": 224,
+    "width": 616,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Player"
+                    }
+                  },
+                  "Property": "position"
+                }
+              },
+              "queryRef": "Dim_Player.position",
+              "nativeQueryRef": "position",
+              "displayName": "Position"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Players Used"
+                }
+              },
+              "queryRef": "_Measures.Players Used",
+              "nativeQueryRef": "Players Used",
+              "displayName": "Players"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Avg Player Rating"
+                }
+              },
+              "queryRef": "_Measures.Avg Player Rating",
+              "nativeQueryRef": "Avg Player Rating",
+              "displayName": "Rating"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Goal Contributions per 90"
+                }
+              },
+              "queryRef": "_Measures.Goal Contributions per 90",
+              "nativeQueryRef": "Goal Contributions per 90",
+              "displayName": "G+A /90"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Key Passes per 90"
+                }
+              },
+              "queryRef": "_Measures.Key Passes per 90",
+              "nativeQueryRef": "Key Passes per 90",
+              "displayName": "Key passes /90"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Defensive Actions per 90"
+                }
+              },
+              "queryRef": "_Measures.Defensive Actions per 90",
+              "nativeQueryRef": "Defensive Actions per 90",
+              "displayName": "Def. actions /90"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Pass Accuracy %"
+                }
+              },
+              "queryRef": "_Measures.Pass Accuracy %",
+              "nativeQueryRef": "Pass Accuracy %",
+              "displayName": "Pass acc."
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Dim_Player"
+                  }
+                },
+                "Property": "position"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Position profile'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

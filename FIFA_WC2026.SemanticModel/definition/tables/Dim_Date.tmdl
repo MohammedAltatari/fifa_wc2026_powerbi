@@ -1,0 +1,130 @@
+/// Calendar table (marked as date table).
+table Dim_Date
+	lineageTag: 719c1055-241e-5b22-845e-be5a4c80eb89
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: 9bfc0c6a-49fc-5fc9-9ea2-68fc6fb195db
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 8a05a10d-48b2-5521-9b1b-fb7a19e75861
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81cae199-f2bf-5d3a-b1ff-bb27215ffe21
+		summarizeBy: none
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 73762b2e-ca7c-5ecd-93e8-5264b8585676
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: b9288ba2-3674-593b-aaeb-d095f18d6f1c
+		summarizeBy: none
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f844e0af-8920-5f23-9045-8dbbeb0b539b
+		summarizeBy: none
+		sourceColumn: Weekday Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday
+		dataType: string
+		lineageTag: 4a5ef4e0-7826-5596-bf08-5b7c153012ad
+		summarizeBy: none
+		sourceColumn: Weekday
+		sortByColumn: 'Weekday Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Start'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 51593af5-e152-5896-8f22-0b90b4067bfb
+		summarizeBy: none
+		sourceColumn: Week Start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Tournament Day'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5cb07b63-95af-5104-931c-e3af9e990f8f
+		summarizeBy: none
+		sourceColumn: Tournament Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Label'
+		dataType: string
+		lineageTag: 57132910-ce8f-57a9-b280-d3766b4f4eec
+		summarizeBy: none
+		sourceColumn: Date Label
+		sortByColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Date = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Dates = Raw_PlayerMatch[match_date],
+				    TournamentStart = List.Min(Dates),
+				    // Full calendar months that cover every match date
+				    StartDate = Date.StartOfMonth(TournamentStart),
+				    EndDate = Date.EndOfMonth(List.Max(Dates)),
+				    DateList = List.Dates(StartDate, Duration.Days(EndDate - StartDate) + 1, #duration(1, 0, 0, 0)),
+				    AsTable = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}),
+				    TypedDate = Table.TransformColumnTypes(AsTable, {{"Date", type date}}),
+				    AddYear = Table.AddColumn(TypedDate, "Year", each Date.Year([Date]), Int64.Type),
+				    AddMonth = Table.AddColumn(AddYear, "Month Number", each Date.Month([Date]), Int64.Type),
+				    AddMonthName = Table.AddColumn(AddMonth, "Month", each Date.MonthName([Date], "en-US"), type text),
+				    AddDay = Table.AddColumn(AddMonthName, "Day", each Date.Day([Date]), Int64.Type),
+				    AddWeekdayNum = Table.AddColumn(AddDay, "Weekday Number", each Date.DayOfWeek([Date], Day.Monday) + 1, Int64.Type),
+				    AddWeekday = Table.AddColumn(AddWeekdayNum, "Weekday", each Text.Start(Date.DayOfWeekName([Date], "en-US"), 3), type text),
+				    AddWeekStart = Table.AddColumn(AddWeekday, "Week Start", each Date.StartOfWeek([Date], Day.Monday), type date),
+				    AddTournamentDay = Table.AddColumn(AddWeekStart, "Tournament Day", each
+				        let d = Duration.Days([Date] - TournamentStart) + 1 in if d >= 1 then d else null, Int64.Type),
+				    AddDateLabel = Table.AddColumn(AddTournamentDay, "Date Label", each Date.ToText([Date], [Format = "dd MMM", Culture = "en-US"]), type text)
+				in
+				    AddDateLabel
+
+	annotation PBI_ResultType = Table
+

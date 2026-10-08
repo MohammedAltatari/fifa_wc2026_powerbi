@@ -1,0 +1,14 @@
+# Power BI local files
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Private working notes (not part of the public portfolio)
+00_project_instructions.md
+01_handoff_plan_and_findings.md
+docs/
+
+# Source data (download separately, see README)
+*.csv
+!qa/reconciliation.csv
+*.pdf
+!client_guide/*.pdf

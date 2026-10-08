@@ -1,0 +1,98 @@
+Page,Check,Power BI (DAX),Python (pandas),Result
+Overview,Matches,"1,050","1,050",OK
+Overview,Total Goals,"2,794","2,794",OK
+Overview,Goals per Match,2.66,2.66,OK
+Overview,Players Used,"1,248","1,248",OK
+Overview,Avg Player Rating,6.29,6.29,OK
+Overview,Draw Rate,26.3%,26.3%,OK
+Overview,Goals per match - Group Stage,2.66,2.66,OK
+Overview,Goals per match - Round of 32,2.69,2.69,OK
+Overview,Goals per match - Round of 16,2.73,2.73,OK
+Overview,Goals per match - Quarter Finals,2.38,2.38,OK
+Overview,Goals per match - Semi Finals,3.00,3.00,OK
+Overview,Goals per match - Third Place Match,2.29,2.29,OK
+Overview,Goals per match - Final,3.00,3.00,OK
+Overview,Top 10 scorers (set),"Dominik Kramaric 15, Eric Mba 14, Eric Rodriguez 15, Gianluigi Calafiori 13, Kasey Hector 16, Memphis Zerrouki 24, Mohannad Majeed 15, Randal Duarte 14, Saleh Al-Qahtani 13, Vinicius Nunes 15","Dominik Kramaric 15, Eric Mba 14, Eric Rodriguez 15, Gianluigi Calafiori 13, Kasey Hector 16, Memphis Zerrouki 24, Mohannad Majeed 15, Randal Duarte 14, Saleh Al-Qahtani 13, Vinicius Nunes 15",OK
+Overview,Matches - Philadelphia,82,82,OK
+Overview,Matches - Monterrey,77,77,OK
+Overview,Matches - Guadalajara,73,73,OK
+Overview,Matches - Vancouver,72,72,OK
+Overview,Matches - Atlanta,71,71,OK
+Overview,Matches - Kansas City,69,69,OK
+Overview,Matches - Houston,68,68,OK
+Overview,Matches - Dallas,67,67,OK
+Overview,Matches - Los Angeles,66,66,OK
+Overview,Matches - San Francisco,66,66,OK
+Overview,Matches - Seattle,61,61,OK
+Overview,Matches - Toronto,61,61,OK
+Overview,Matches - Miami,60,60,OK
+Overview,Matches - East Rutherford,54,54,OK
+Overview,Matches - Mexico City,53,53,OK
+Overview,Matches - Boston,50,50,OK
+Teams,Row - Nigeria (MP W D L Win% Pts/M GF/M GA/M GD xG/M),40 23 10 7 57.5% 1.98 1.70 1.05 +26 0.38,40 23 10 7 57.5% 1.98 1.70 1.05 +26 0.38,OK
+Teams,Row - Colombia (MP W D L Win% Pts/M GF/M GA/M GD xG/M),46 24 4 18 52.2% 1.65 1.43 1.33 +5 0.41,46 24 4 18 52.2% 1.65 1.43 1.33 +5 0.41,OK
+Teams,Row - Brazil (MP W D L Win% Pts/M GF/M GA/M GD xG/M),45 22 11 12 48.9% 1.71 1.62 1.18 +20 0.43,45 22 11 12 48.9% 1.71 1.62 1.18 +20 0.43,OK
+Teams,Row - Portugal (MP W D L Win% Pts/M GF/M GA/M GD xG/M),43 21 9 13 48.8% 1.67 1.47 1.33 +6 0.39,43 21 9 13 48.8% 1.67 1.47 1.33 +6 0.39,OK
+Teams,Row - Belgium (MP W D L Win% Pts/M GF/M GA/M GD xG/M),51 24 11 16 47.1% 1.63 1.55 1.37 +9 0.54,51 24 11 16 47.1% 1.63 1.55 1.37 +9 0.54,OK
+Teams,Row - Algeria (MP W D L Win% Pts/M GF/M GA/M GD xG/M),41 19 7 15 46.3% 1.56 1.46 1.24 +9 0.42,41 19 7 15 46.3% 1.56 1.46 1.24 +9 0.42,OK
+Teams,Row - Jamaica (MP W D L Win% Pts/M GF/M GA/M GD xG/M),59 27 9 23 45.8% 1.53 1.49 1.36 +8 0.35,59 27 9 23 45.8% 1.53 1.49 1.36 +8 0.35,OK
+Teams,Row - Austria (MP W D L Win% Pts/M GF/M GA/M GD xG/M),33 13 12 8 39.4% 1.55 1.64 1.30 +11 0.49,33 13 12 8 39.4% 1.55 1.64 1.30 +11 0.49,OK
+Teams,Win % - CONMEBOL,38.4%,38.4%,OK
+Teams,Win % - UEFA,37.3%,37.3%,OK
+Teams,Win % - CAF,36.9%,36.9%,OK
+Teams,Win % - CONCACAF,36.7%,36.7%,OK
+Teams,Win % - AFC,34.6%,34.6%,OK
+Players,Value vs rating correlation (900+ min),0.73,0.73,OK
+Players,"Best value - Marcus Mount (EUR M, rating, rating pct, value pct, gap)",1.0 6.27 57% 1% +56%,1.0 6.27 57% 1% +56%,OK
+Players,"Best value - Themba Xoki (EUR M, rating, rating pct, value pct, gap)",7.9 6.95 91% 41% +50%,7.9 6.95 91% 41% +50%,OK
+Players,"Best value - Cengiz Gonul (EUR M, rating, rating pct, value pct, gap)",5.4 6.57 78% 30% +49%,5.4 6.57 78% 30% +49%,OK
+Players,"Best value - Victor Ajayi (EUR M, rating, rating pct, value pct, gap)",5.3 6.53 77% 29% +48%,5.3 6.53 77% 29% +48%,OK
+Players,"Best value - Nabil Bennacer (EUR M, rating, rating pct, value pct, gap)",1.8 6.21 51% 4% +47%,1.8 6.21 51% 4% +47%,OK
+Players,"Best value - Xherdan Mvogo (EUR M, rating, rating pct, value pct, gap)",1.7 6.19 49% 3% +46%,1.7 6.19 49% 3% +46%,OK
+Players,"Best value - Leandro Pezzella (EUR M, rating, rating pct, value pct, gap)",2.1 6.21 50% 6% +45%,2.1 6.21 50% 6% +45%,OK
+Players,"Best value - Ao Mori (EUR M, rating, rating pct, value pct, gap)",2.7 6.25 55% 10% +44%,2.7 6.25 55% 10% +44%,OK
+Players,"Best value - Christian Robinson (EUR M, rating, rating pct, value pct, gap)",1.4 6.14 45% 2% +43%,1.4 6.14 45% 2% +43%,OK
+Players,Best value - top 9 order,"Mount, Xoki, Gonul, Ajayi, Bennacer, Mvogo, Pezzella, Mori, Robinson","Mount, Xoki, Gonul, Ajayi, Bennacer, Mvogo, Pezzella, Mori, Robinson",OK
+Players,Position profile - Goalkeeper,144 6.21 0.03 0.32 1.95 70.0%,144 6.21 0.03 0.32 1.95 70.0%,OK
+Players,Position profile - Defender,432 6.24 0.10 0.55 10.90 80.6%,432 6.24 0.10 0.55 10.90 80.6%,OK
+Players,Position profile - Midfielder,384 6.31 0.32 1.91 5.17 83.7%,384 6.31 0.32 1.91 5.17 83.7%,OK
+Players,Position profile - Forward,288 6.36 0.53 1.42 1.70 75.9%,288 6.36 0.53 1.42 1.70 75.9%,OK
+Physical,Distance per 90 (km),9.9,9.9,OK
+Physical,Sprint distance per 90 (km),1.15,1.15,OK
+Physical,Avg top speed (km/h),32.3,32.3,OK
+Physical,Max top speed (km/h),37.0,37.0,OK
+Physical,Avg stamina score,87.0,87.0,OK
+Physical,"Goalkeeper: distance/90, sprint/90, top speed",8.5 0.97 29.0,8.5 0.97 29.0,OK
+Physical,"Defender: distance/90, sprint/90, top speed",9.6 1.11 32.5,9.6 1.11 32.5,OK
+Physical,"Midfielder: distance/90, sprint/90, top speed",10.8 1.24 32.5,10.8 1.24 32.5,OK
+Physical,"Forward: distance/90, sprint/90, top speed",9.9 1.15 32.5,9.9 1.15 32.5,OK
+Compare,Appearances (Zerrouki | Majeed),33 | 23,33 | 23,OK
+Compare,Minutes Played (Zerrouki | Majeed),"2,235 | 1,396","2,235 | 1,396",OK
+Compare,Avg Player Rating (Zerrouki | Majeed),7.54 | 7.61,7.54 | 7.61,OK
+Compare,Market Value (EUR M) (Zerrouki | Majeed),154.4 | 71.7,154.4 | 71.7,OK
+Compare,Goals (Zerrouki | Majeed),24 | 15,24 | 15,OK
+Compare,Assists (Zerrouki | Majeed),9 | 10,9 | 10,OK
+Compare,Goals per 90 (Zerrouki | Majeed),0.97 | 0.97,0.97 | 0.97,OK
+Compare,Assists per 90 (Zerrouki | Majeed),0.36 | 0.64,0.36 | 0.64,OK
+Compare,xG per 90 (Zerrouki | Majeed),0.13 | 0.14,0.13 | 0.14,OK
+Compare,xA per 90 (Zerrouki | Majeed),0.06 | 0.11,0.06 | 0.11,OK
+Compare,Shots per 90 (Zerrouki | Majeed),3.30 | 3.42,3.30 | 3.42,OK
+Compare,Shot Accuracy % (Zerrouki | Majeed),20.7% | 17.0%,20.7% | 17.0%,OK
+Compare,Conversion % (Zerrouki | Majeed),29.3% | 28.3%,29.3% | 28.3%,OK
+Compare,Key Passes per 90 (Zerrouki | Majeed),2.62 | 2.39,2.62 | 2.39,OK
+Compare,Pass Accuracy % (Zerrouki | Majeed),78.2% | 75.6%,78.2% | 75.6%,OK
+Player Profile,Appearances (Aaron Wright | Forward avg | diff),35 | 27 | +31%,35 | 27 | +31%,OK
+Player Profile,Minutes Played (Aaron Wright | Forward avg | diff),"1,842 | 1,647 | +12%","1,842 | 1,647 | +12%",OK
+Player Profile,Avg Player Rating (Aaron Wright | Forward avg | diff),6.08 | 6.36 | -4%,6.08 | 6.36 | -4%,OK
+Player Profile,Market Value (EUR M) (Aaron Wright | Forward avg | diff),13.0 | 26.4 | -51%,13.0 | 26.4 | -51%,OK
+Player Profile,Goals (Aaron Wright | Forward avg | diff),9 | 6 | +44%,9 | 6 | +44%,OK
+Player Profile,Assists (Aaron Wright | Forward avg | diff),5 | 3 | +46%,5 | 3 | +46%,OK
+Player Profile,Goals per 90 (Aaron Wright | Forward avg | diff),0.44 | 0.34 | +28%,0.44 | 0.34 | +28%,OK
+Player Profile,Assists per 90 (Aaron Wright | Forward avg | diff),0.24 | 0.19 | +30%,0.24 | 0.19 | +30%,OK
+Player Profile,xG per 90 (Aaron Wright | Forward avg | diff),0.06 | 0.11 | -46%,0.06 | 0.11 | -46%,OK
+Player Profile,xA per 90 (Aaron Wright | Forward avg | diff),0.02 | 0.06 | -68%,0.02 | 0.06 | -68%,OK
+Player Profile,Shots per 90 (Aaron Wright | Forward avg | diff),1.71 | 2.35 | -27%,1.71 | 2.35 | -27%,OK
+Player Profile,Shot Accuracy % (Aaron Wright | Forward avg | diff),14.3% | 16.2% | -12%,14.3% | 16.2% | -12%,OK
+Player Profile,Conversion % (Aaron Wright | Forward avg | diff),25.7% | 14.6% | +77%,25.7% | 14.6% | +77%,OK
+Player Profile,Key Passes per 90 (Aaron Wright | Forward avg | diff),1.03 | 1.42 | -28%,1.03 | 1.42 | -28%,OK
+Player Profile,Info line,Australia | Forward | Age 23 | Ulsan HD | 185 cm | Right foot,Australia | Forward | Age 23 | Ulsan HD | 185 cm | Right foot,OK

@@ -1,0 +1,169 @@
+/// One row per match (1,050).
+table Dim_Match
+	lineageTag: 8120877e-65da-5381-9bc8-a79355c06a25
+
+	column match_id
+		dataType: string
+		isKey
+		lineageTag: c68657c9-9ee0-58eb-84ce-4d5204a9af29
+		summarizeBy: none
+		sourceColumn: match_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: a928bd16-a17e-5190-872e-c6d0de474d01
+		summarizeBy: none
+		sourceColumn: match_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column stadium
+		dataType: string
+		isHidden
+		lineageTag: 347fde17-9d50-5570-9c2b-73db6613afab
+		summarizeBy: none
+		sourceColumn: stadium
+
+		annotation SummarizationSetBy = Automatic
+
+	column tournament_stage
+		dataType: string
+		lineageTag: bece3eae-b523-5b6f-923a-a94ebc22154c
+		summarizeBy: none
+		sourceColumn: tournament_stage
+		sortByColumn: 'Stage Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Team 1'
+		dataType: string
+		lineageTag: 976b1e94-2fe4-5cc1-9f31-2708653242ec
+		summarizeBy: none
+		sourceColumn: Team 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Team 2'
+		dataType: string
+		lineageTag: 77ac5048-4aa2-5930-83d8-3524830fbdbb
+		summarizeBy: none
+		sourceColumn: Team 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Team 1 Goals'
+		dataType: int64
+		formatString: 0
+		lineageTag: afccd9d0-0a4d-5b40-8b8c-7f116b14e88b
+		summarizeBy: none
+		sourceColumn: Team 1 Goals
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Team 2 Goals'
+		dataType: int64
+		formatString: 0
+		lineageTag: d8a2de39-e45d-5786-b1fa-cae76eb64397
+		summarizeBy: none
+		sourceColumn: Team 2 Goals
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Match Number'
+		dataType: int64
+		formatString: 0
+		lineageTag: d13faed9-eaac-5772-b404-4f64e86e9f6d
+		summarizeBy: none
+		sourceColumn: Match Number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Match Goals'
+		dataType: int64
+		formatString: 0
+		lineageTag: 17aa6f6d-c97f-59de-b3c3-38f964a16cb0
+		summarizeBy: sum
+		sourceColumn: Match Goals
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fixture
+		dataType: string
+		lineageTag: 60e9ee8e-deea-5bf9-ac09-170178357095
+		summarizeBy: none
+		sourceColumn: Fixture
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Match Label'
+		dataType: string
+		lineageTag: c802ea6c-5592-5bf4-8ffa-defe0e8bb38d
+		summarizeBy: none
+		sourceColumn: Match Label
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stage Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0ba72263-5321-5fae-a040-42e21affa20a
+		summarizeBy: none
+		sourceColumn: Stage Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Stage Type'
+		dataType: string
+		lineageTag: f2ad5339-8a05-5267-8eb6-991d511e181a
+		summarizeBy: none
+		sourceColumn: Stage Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Draw'
+		dataType: int64
+		formatString: 0
+		lineageTag: 2bf6150c-f621-500e-b3fe-c9aceacbbf74
+		summarizeBy: none
+		sourceColumn: Is Draw
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Match = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Source = Raw_PlayerMatch,
+				    TeamRows = Table.Distinct(Table.SelectColumns(Source, {"match_id", "match_date", "stadium", "tournament_stage", "team", "goals_team"})),
+				    // Collapse the 2 team rows of each match into one row; teams ordered alphabetically for a stable label
+				    Grouped = Table.Group(
+				        TeamRows,
+				        {"match_id", "match_date", "stadium", "tournament_stage"},
+				        {
+				            {"Team 1", (t) => List.Min(t[team]), type text},
+				            {"Team 2", (t) => List.Max(t[team]), type text},
+				            {"Team 1 Goals", (t) => Table.SelectRows(t, (r) => r[team] = List.Min(t[team])){0}[goals_team], Int64.Type},
+				            {"Team 2 Goals", (t) => Table.SelectRows(t, (r) => r[team] = List.Max(t[team])){0}[goals_team], Int64.Type}
+				        }
+				    ),
+				    AddMatchNumber = Table.AddColumn(Grouped, "Match Number", each Number.From(Text.Middle([match_id], 1)), Int64.Type),
+				    AddTotalGoals = Table.AddColumn(AddMatchNumber, "Match Goals", each [Team 1 Goals] + [Team 2 Goals], Int64.Type),
+				    AddFixture = Table.AddColumn(AddTotalGoals, "Fixture", each [Team 1] & " vs " & [Team 2], type text),
+				    AddScoreLabel = Table.AddColumn(AddFixture, "Match Label", each [Team 1] & " " & Text.From([Team 1 Goals]) & "-" & Text.From([Team 2 Goals]) & " " & [Team 2] & " (" & [match_id] & ")", type text),
+				    AddStageOrder = Table.AddColumn(AddScoreLabel, "Stage Order", each List.PositionOf({"Group Stage", "Round of 32", "Round of 16", "Quarter Finals", "Semi Finals", "Third Place Match", "Final"}, [tournament_stage]) + 1, Int64.Type),
+				    AddStageType = Table.AddColumn(AddStageOrder, "Stage Type", each if [tournament_stage] = "Group Stage" then "Group Stage" else "Knockout", type text),
+				    AddIsDraw = Table.AddColumn(AddStageType, "Is Draw", each if [Team 1 Goals] = [Team 2 Goals] then 1 else 0, Int64.Type),
+				    Sorted = Table.Sort(AddIsDraw, {{"match_id", Order.Ascending}}),
+				    Typed = Table.TransformColumnTypes(Sorted, {{"match_id", type text}, {"match_date", type date}, {"stadium", type text}, {"tournament_stage", type text}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,213 @@
+/// One row per team per match (2,100). Grain of team results.
+table Fact_TeamMatch
+	lineageTag: c50f476d-7257-5e87-ba4a-378addba0937
+
+	column match_id
+		dataType: string
+		isHidden
+		lineageTag: b542f584-d43a-569b-9b49-47e5be260cda
+		summarizeBy: none
+		sourceColumn: match_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 0f222f72-ef2f-5ce0-a612-8edb2010d7ad
+		summarizeBy: none
+		sourceColumn: match_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column stadium
+		dataType: string
+		isHidden
+		lineageTag: 4bff90e5-0447-5fd0-a1b1-8ab5183a0168
+		summarizeBy: none
+		sourceColumn: stadium
+
+		annotation SummarizationSetBy = Automatic
+
+	column team
+		dataType: string
+		isHidden
+		lineageTag: c30e7431-86ab-5bae-b13f-ea9e5152f3ba
+		summarizeBy: none
+		sourceColumn: team
+
+		annotation SummarizationSetBy = Automatic
+
+	column opponent_team
+		dataType: string
+		lineageTag: 65a6583e-5d0e-5faa-9d9c-fb5960b809a1
+		summarizeBy: none
+		sourceColumn: opponent_team
+
+		annotation SummarizationSetBy = Automatic
+
+	column result
+		dataType: string
+		lineageTag: 4706946c-e552-5f12-a57a-4dad1c1def77
+		summarizeBy: none
+		sourceColumn: result
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_for
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3d0a410f-dbd8-50f0-8ae4-907ae2314ea5
+		summarizeBy: sum
+		sourceColumn: goals_for
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_against
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8d317140-50f5-5ef5-87c9-e59d6869e12e
+		summarizeBy: sum
+		sourceColumn: goals_against
+
+		annotation SummarizationSetBy = Automatic
+
+	column xg_for
+		dataType: double
+		isHidden
+		lineageTag: 885daae4-79f4-51cb-a59b-0c1928b24109
+		summarizeBy: sum
+		sourceColumn: xg_for
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots_for
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c91d054f-ef01-55c5-9d77-9265d242bd29
+		summarizeBy: sum
+		sourceColumn: shots_for
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots_on_target_for
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 66a81a34-96c7-540c-994e-1dada274ec82
+		summarizeBy: sum
+		sourceColumn: shots_on_target_for
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_goals_sum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d135ba2a-83b3-511e-94b7-83f139c44d0f
+		summarizeBy: sum
+		sourceColumn: player_goals_sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column yellow_cards
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9322c91b-38e2-5e4d-9d9a-a709b7b650ef
+		summarizeBy: sum
+		sourceColumn: yellow_cards
+
+		annotation SummarizationSetBy = Automatic
+
+	column red_cards
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3ac30da0-f353-57b9-96f4-84dec8d2eb1e
+		summarizeBy: sum
+		sourceColumn: red_cards
+
+		annotation SummarizationSetBy = Automatic
+
+	column xg_against
+		dataType: double
+		isHidden
+		lineageTag: 7aefbf9f-2e2b-5dec-b4a0-46b42b1aa1da
+		summarizeBy: sum
+		sourceColumn: xg_against
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots_against
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 960874a4-3433-5d3e-96d9-b6f49797fdff
+		summarizeBy: sum
+		sourceColumn: shots_against
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots_on_target_against
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7dcdb546-f331-5c4e-989a-108de0845ad2
+		summarizeBy: sum
+		sourceColumn: shots_on_target_against
+
+		annotation SummarizationSetBy = Automatic
+
+	column points
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5a3b50cf-a833-59e1-a826-0cf4d70c1362
+		summarizeBy: sum
+		sourceColumn: points
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_TeamMatch = m
+		mode: import
+		queryGroup: Facts
+		source =
+				let
+				    Source = Raw_PlayerMatch,
+				    // One row per team per match (2 rows per match). Team score comes from goals_team, NOT from the sum of player goals.
+				    Grouped = Table.Group(
+				        Source,
+				        {"match_id", "match_date", "stadium", "team", "opponent_team", "match_result", "goals_team", "goals_opponent"},
+				        {
+				            {"xg_for", each Number.Round(List.Sum([expected_goals_xg]), 2), type number},
+				            {"shots_for", each List.Sum([shots]), Int64.Type},
+				            {"shots_on_target_for", each List.Sum([shots_on_target]), Int64.Type},
+				            {"player_goals_sum", each List.Sum([goals]), Int64.Type},
+				            {"yellow_cards", each List.Sum([yellow_cards]), Int64.Type},
+				            {"red_cards", each List.Sum([red_cards]), Int64.Type}
+				        }
+				    ),
+				    // Self-join to bring the opponent's xG and shots onto the same row
+				    Opponent = Table.SelectColumns(Grouped, {"match_id", "team", "xg_for", "shots_for", "shots_on_target_for"}),
+				    Merged = Table.NestedJoin(Grouped, {"match_id", "opponent_team"}, Opponent, {"match_id", "team"}, "Opp", JoinKind.LeftOuter),
+				    Expanded = Table.ExpandTableColumn(Merged, "Opp", {"xg_for", "shots_for", "shots_on_target_for"}, {"xg_against", "shots_against", "shots_on_target_against"}),
+				    Renamed = Table.RenameColumns(Expanded, {{"match_result", "result"}, {"goals_team", "goals_for"}, {"goals_opponent", "goals_against"}}),
+				    AddPoints = Table.AddColumn(Renamed, "points", each if [result] = "W" then 3 else if [result] = "D" then 1 else 0, Int64.Type),
+				    Typed = Table.TransformColumnTypes(AddPoints, {
+				        {"match_id", type text}, {"match_date", type date}, {"stadium", type text}, {"team", type text},
+				        {"opponent_team", type text}, {"result", type text}, {"goals_for", Int64.Type}, {"goals_against", Int64.Type},
+				        {"xg_for", type number}, {"xg_against", type number}, {"shots_for", Int64.Type}, {"shots_against", Int64.Type},
+				        {"shots_on_target_for", Int64.Type}, {"shots_on_target_against", Int64.Type}, {"player_goals_sum", Int64.Type},
+				        {"yellow_cards", Int64.Type}, {"red_cards", Int64.Type}, {"points", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

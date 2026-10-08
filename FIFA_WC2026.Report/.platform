@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "FIFA_WC2026"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e797b915-7a8d-4732-8e4b-ae1b2fec969e"
+  }
+}

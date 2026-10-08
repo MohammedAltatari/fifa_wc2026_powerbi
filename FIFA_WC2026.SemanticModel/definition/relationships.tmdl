@@ -1,0 +1,36 @@
+relationship 7269b9ac-ca12-5593-a0fa-2c73b3d752ab
+	fromColumn: Fact_PlayerMatch.player_id
+	toColumn: Dim_Player.player_id
+
+relationship f98c9c9f-8f62-516e-8902-383446114b56
+	fromColumn: Fact_PlayerMatch.team
+	toColumn: Dim_Team.team
+
+relationship 77b7b4d5-6722-5088-90ac-34ead38905d1
+	fromColumn: Fact_PlayerMatch.match_id
+	toColumn: Dim_Match.match_id
+
+relationship aa94a0eb-3c3e-50b1-a0b1-42fcdc33f442
+	fromColumn: Fact_PlayerMatch.match_date
+	toColumn: Dim_Date.Date
+
+relationship f30fedb2-2c13-51a3-ba94-a497c79da994
+	fromColumn: Fact_PlayerMatch.stadium
+	toColumn: Dim_Stadium.stadium
+
+relationship 7e999a74-766a-5f16-9ffc-ace4fa4fecbe
+	fromColumn: Fact_TeamMatch.team
+	toColumn: Dim_Team.team
+
+relationship 0e75ecd1-1fe1-57e1-b4c3-ce2b157e4526
+	fromColumn: Fact_TeamMatch.match_id
+	toColumn: Dim_Match.match_id
+
+relationship 6616fda6-b6b6-57eb-baed-9de668089ce9
+	fromColumn: Fact_TeamMatch.match_date
+	toColumn: Dim_Date.Date
+
+relationship cccc335d-dfb9-5a07-b23b-ec3ce3a5b327
+	fromColumn: Fact_TeamMatch.stadium
+	toColumn: Dim_Stadium.stadium
+

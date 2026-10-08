@@ -1,0 +1,100 @@
+/// Metric list for the comparison and profile pages.
+table Comparison_Metrics
+	lineageTag: d025bd05-624a-57e7-9517-96568375bb5e
+
+	column Metric
+		dataType: string
+		lineageTag: b03a6c63-95e5-52ba-9e60-0c268b3ebab1
+		summarizeBy: none
+		sourceColumn: Metric
+		sortByColumn: 'Metric Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e8e827b5-1ff1-5709-b640-019603674124
+		summarizeBy: none
+		sourceColumn: Metric Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 080b5281-3bef-55c6-8974-bb11cd243ec3
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Format
+		dataType: string
+		isHidden
+		lineageTag: 45cc2e01-3c98-5774-87ce-8d3aa3e5f587
+		summarizeBy: none
+		sourceColumn: Format
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Higher Is Better'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a5576ed8-b2ca-5d83-b0df-d6d09f7d086e
+		summarizeBy: none
+		sourceColumn: Higher Is Better
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Rate'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 548f6f3a-1638-5351-93d6-960beb4e80f1
+		summarizeBy: none
+		sourceColumn: Is Rate
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Comparison_Metrics = m
+		mode: import
+		queryGroup: Helpers
+		source =
+				let
+				    // List of metrics shown on the Player Comparison and Player Profile pages
+				    Source = #table(
+				        type table [Metric = text, #"Metric Order" = Int64.Type, Category = text, Format = text, #"Higher Is Better" = Int64.Type, #"Is Rate" = Int64.Type],
+				        {
+				        {"Appearances", 1, "Overall", "#,0", 1, 0},
+				        {"Minutes Played", 2, "Overall", "#,0", 1, 0},
+				        {"Avg Player Rating", 3, "Overall", "0.00", 1, 1},
+				        {"Market Value (EUR M)", 4, "Overall", "#,0.0", 1, 0},
+				        {"Goals", 5, "Attacking", "#,0", 1, 0},
+				        {"Assists", 6, "Attacking", "#,0", 1, 0},
+				        {"Goals per 90", 7, "Attacking", "0.00", 1, 1},
+				        {"Assists per 90", 8, "Attacking", "0.00", 1, 1},
+				        {"xG per 90", 9, "Attacking", "0.00", 1, 1},
+				        {"xA per 90", 10, "Attacking", "0.00", 1, 1},
+				        {"Shots per 90", 11, "Attacking", "0.00", 1, 1},
+				        {"Shot Accuracy %", 12, "Attacking", "0.0%", 1, 1},
+				        {"Conversion %", 13, "Attacking", "0.0%", 1, 1},
+				        {"Key Passes per 90", 14, "Passing", "0.00", 1, 1},
+				        {"Pass Accuracy %", 15, "Passing", "0.0%", 1, 1},
+				        {"Dribble Success %", 16, "Passing", "0.0%", 1, 1},
+				        {"Defensive Actions per 90", 17, "Defending", "0.00", 1, 1},
+				        {"Tackles + Interceptions per 90", 18, "Defending", "0.00", 1, 1},
+				        {"Aerial Duel Win %", 19, "Defending", "0.0%", 1, 1},
+				        {"Distance per 90 (km)", 20, "Physical", "0.0", 1, 1},
+				        {"Avg Top Speed (km/h)", 21, "Physical", "0.0", 1, 1},
+				        {"Avg Stamina Score", 22, "Physical", "0.0", 1, 1},
+				        {"Saves per 90", 23, "Goalkeeping", "0.00", 1, 1},
+				        {"Save %", 24, "Goalkeeping", "0.0%", 1, 1}
+				        }
+				    )
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

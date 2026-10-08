@@ -1,0 +1,102 @@
+/// One row per national team (48).
+table Dim_Team
+	lineageTag: 64dc4472-67b1-519c-a4c9-ace257969ebe
+
+	column team
+		dataType: string
+		isKey
+		lineageTag: bf1bd2f8-1160-5db1-bb85-8444bdc68daa
+		summarizeBy: none
+		sourceColumn: team
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Team Code'
+		dataType: string
+		lineageTag: 65fa892d-69d3-5b48-866d-ba03e42b684c
+		summarizeBy: none
+		sourceColumn: Team Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Confederation
+		dataType: string
+		lineageTag: e863be35-4a85-567f-8104-f8b29f484ce0
+		summarizeBy: none
+		sourceColumn: Confederation
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Team = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Source = Raw_PlayerMatch,
+				    Teams = Table.Distinct(Table.SelectColumns(Source, {"team"})),
+				    // Reference data: FIFA 3-letter code and continental confederation
+				    Lookup = #table(
+				        type table [team = text, #"Team Code" = text, Confederation = text],
+				        {
+				            {"Algeria", "ALG", "CAF"},
+				            {"Argentina", "ARG", "CONMEBOL"},
+				            {"Australia", "AUS", "AFC"},
+				            {"Austria", "AUT", "UEFA"},
+				            {"Belgium", "BEL", "UEFA"},
+				            {"Brazil", "BRA", "CONMEBOL"},
+				            {"Cameroon", "CMR", "CAF"},
+				            {"Canada", "CAN", "CONCACAF"},
+				            {"Chile", "CHI", "CONMEBOL"},
+				            {"Colombia", "COL", "CONMEBOL"},
+				            {"Costa Rica", "CRC", "CONCACAF"},
+				            {"Croatia", "CRO", "UEFA"},
+				            {"Denmark", "DEN", "UEFA"},
+				            {"Ecuador", "ECU", "CONMEBOL"},
+				            {"Egypt", "EGY", "CAF"},
+				            {"England", "ENG", "UEFA"},
+				            {"France", "FRA", "UEFA"},
+				            {"Germany", "GER", "UEFA"},
+				            {"Ghana", "GHA", "CAF"},
+				            {"Iran", "IRN", "AFC"},
+				            {"Iraq", "IRQ", "AFC"},
+				            {"Italy", "ITA", "UEFA"},
+				            {"Jamaica", "JAM", "CONCACAF"},
+				            {"Japan", "JPN", "AFC"},
+				            {"Mexico", "MEX", "CONCACAF"},
+				            {"Morocco", "MAR", "CAF"},
+				            {"Netherlands", "NED", "UEFA"},
+				            {"Nigeria", "NGA", "CAF"},
+				            {"Panama", "PAN", "CONCACAF"},
+				            {"Peru", "PER", "CONMEBOL"},
+				            {"Poland", "POL", "UEFA"},
+				            {"Portugal", "POR", "UEFA"},
+				            {"Qatar", "QAT", "AFC"},
+				            {"Saudi Arabia", "KSA", "AFC"},
+				            {"Scotland", "SCO", "UEFA"},
+				            {"Senegal", "SEN", "CAF"},
+				            {"Serbia", "SRB", "UEFA"},
+				            {"South Africa", "RSA", "CAF"},
+				            {"South Korea", "KOR", "AFC"},
+				            {"Spain", "ESP", "UEFA"},
+				            {"Sweden", "SWE", "UEFA"},
+				            {"Switzerland", "SUI", "UEFA"},
+				            {"Tunisia", "TUN", "CAF"},
+				            {"Turkey", "TUR", "UEFA"},
+				            {"Ukraine", "UKR", "UEFA"},
+				            {"United States", "USA", "CONCACAF"},
+				            {"Uruguay", "URU", "CONMEBOL"},
+				            {"Uzbekistan", "UZB", "AFC"}
+				        }
+				    ),
+				    Joined = Table.NestedJoin(Teams, {"team"}, Lookup, {"team"}, "L", JoinKind.LeftOuter),
+				    Expanded = Table.ExpandTableColumn(Joined, "L", {"Team Code", "Confederation"}),
+				    // Safety net if a new team ever appears in the source
+				    FixCode = Table.ReplaceValue(Expanded, each [Team Code], each if [Team Code] = null then Text.Upper(Text.Start([team], 3)) else [Team Code], Replacer.ReplaceValue, {"Team Code"}),
+				    FixConf = Table.ReplaceValue(FixCode, null, "Unknown", Replacer.ReplaceValue, {"Confederation"}),
+				    Sorted = Table.Sort(FixConf, {{"team", Order.Ascending}}),
+				    Typed = Table.TransformColumnTypes(Sorted, {{"team", type text}, {"Team Code", type text}, {"Confederation", type text}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

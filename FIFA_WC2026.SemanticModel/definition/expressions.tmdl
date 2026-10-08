@@ -1,0 +1,24 @@
+expression CsvFilePath = "E:\university\my project\fifa_world_cup_2026_player_performance\fifa_world_cup_2026_player_performance.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 7186c59a-b517-5f23-9277-c6703356f5ae
+	queryGroup: Parameters
+
+	annotation PBI_ResultType = Text
+
+/// Staging query: the typed CSV. Not loaded to the model; every table below references it.
+expression Raw_PlayerMatch =
+		let
+		    // Read the full CSV (path comes from the CsvFilePath parameter)
+		    Source = Csv.Document(File.Contents(CsvFilePath), [Delimiter = ",", Columns = 75, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+		    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+		    // Explicit types; culture en-US so "0.85" is read as a decimal everywhere
+		    TypedText = Table.TransformColumnTypes(PromotedHeaders, {{"player_id", type text}, {"player_name", type text}, {"nationality", type text}, {"team", type text}, {"position", type text}, {"preferred_foot", type text}, {"club_name", type text}, {"match_id", type text}, {"stadium", type text}, {"city", type text}, {"opponent_team", type text}, {"tournament_stage", type text}, {"match_result", type text}}, "en-US"),
+		    TypedDate = Table.TransformColumnTypes(TypedText, {{"match_date", type date}}, "en-US"),
+		    TypedInt = Table.TransformColumnTypes(TypedDate, {{"age", Int64.Type}, {"jersey_number", Int64.Type}, {"height_cm", Int64.Type}, {"weight_kg", Int64.Type}, {"market_value_eur", Int64.Type}, {"goals_team", Int64.Type}, {"goals_opponent", Int64.Type}, {"minutes_played", Int64.Type}, {"goals", Int64.Type}, {"assists", Int64.Type}, {"shots", Int64.Type}, {"shots_on_target", Int64.Type}, {"key_passes", Int64.Type}, {"successful_passes", Int64.Type}, {"total_passes", Int64.Type}, {"dribbles_attempted", Int64.Type}, {"successful_dribbles", Int64.Type}, {"crosses", Int64.Type}, {"successful_crosses", Int64.Type}, {"tackles", Int64.Type}, {"interceptions", Int64.Type}, {"clearances", Int64.Type}, {"blocks", Int64.Type}, {"aerial_duels_won", Int64.Type}, {"aerial_duels_lost", Int64.Type}, {"recoveries", Int64.Type}, {"defensive_actions", Int64.Type}, {"fouls_committed", Int64.Type}, {"fouls_suffered", Int64.Type}, {"yellow_cards", Int64.Type}, {"red_cards", Int64.Type}, {"offsides", Int64.Type}, {"saves", Int64.Type}, {"punches", Int64.Type}, {"clean_sheet", Int64.Type}, {"goals_conceded", Int64.Type}, {"penalty_saves", Int64.Type}, {"accelerations", Int64.Type}, {"decelerations", Int64.Type}, {"total_goals_tournament", Int64.Type}, {"total_assists_tournament", Int64.Type}, {"total_minutes_tournament", Int64.Type}, {"player_of_match_awards", Int64.Type}}, "en-US"),
+		    TypedDecimal = Table.TransformColumnTypes(TypedInt, {{"expected_goals_xg", type number}, {"expected_assists_xa", type number}, {"pass_accuracy", type number}, {"save_percentage", type number}, {"distance_covered_km", type number}, {"sprint_distance_km", type number}, {"top_speed_kmh", type number}, {"stamina_score", type number}, {"player_rating", type number}, {"performance_score", type number}, {"offensive_contribution", type number}, {"defensive_contribution", type number}, {"possession_impact", type number}, {"pressure_resistance", type number}, {"creativity_score", type number}, {"consistency_score", type number}, {"clutch_performance_score", type number}, {"tournament_rating", type number}}, "en-US")
+		in
+		    TypedDecimal
+	lineageTag: f15e1a0b-d119-5f18-bdaf-a7a7d9b4bc0d
+	queryGroup: Staging
+
+	annotation PBI_ResultType = Table
+

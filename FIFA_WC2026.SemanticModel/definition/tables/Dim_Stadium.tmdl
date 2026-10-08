@@ -1,0 +1,99 @@
+/// One row per stadium (16) with coordinates for the map.
+table Dim_Stadium
+	lineageTag: 339d05f9-2076-5109-a41d-fce404bc84c5
+
+	column stadium
+		dataType: string
+		isKey
+		lineageTag: 55de0515-7cb7-5ad7-a02f-2a9414e1e487
+		summarizeBy: none
+		sourceColumn: stadium
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 1f968723-8fbc-5189-86a0-dfd993ee4612
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 55197beb-2696-59bb-8793-170aa9b5ae0e
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		formatString: 0.0000
+		lineageTag: 89a70644-aa34-53b3-a93d-2957d3ee2375
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column Longitude
+		dataType: double
+		formatString: 0.0000
+		lineageTag: 35a1002a-71dd-5bea-a80d-31fa7b20d0c3
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column Location
+		dataType: string
+		lineageTag: 0c164038-8136-5591-b7f8-37f3bccdfca5
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: Location
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Stadium = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Source = Raw_PlayerMatch,
+				    Stadiums = Table.Distinct(Table.SelectColumns(Source, {"stadium", "city"})),
+				    // Reference data: host country and approximate coordinates (for the map visual)
+				    Lookup = #table(
+				        type table [stadium = text, Country = text, Latitude = number, Longitude = number],
+				        {
+				            {"AT&T Stadium", "United States", 32.7473, -97.0945},
+				            {"Arrowhead Stadium", "United States", 39.0489, -94.4839},
+				            {"BC Place", "Canada", 49.2768, -123.112},
+				            {"BMO Field", "Canada", 43.6332, -79.4186},
+				            {"Estadio Akron", "Mexico", 20.6817, -103.4627},
+				            {"Estadio Azteca", "Mexico", 19.3029, -99.1505},
+				            {"Estadio BBVA", "Mexico", 25.669, -100.2445},
+				            {"Gillette Stadium", "United States", 42.0909, -71.2643},
+				            {"Hard Rock Stadium", "United States", 25.958, -80.2389},
+				            {"Levi's Stadium", "United States", 37.403, -121.97},
+				            {"Lincoln Financial Field", "United States", 39.9008, -75.1675},
+				            {"Lumen Field", "United States", 47.5952, -122.3316},
+				            {"Mercedes-Benz Stadium", "United States", 33.7554, -84.4008},
+				            {"MetLife Stadium", "United States", 40.8135, -74.0745},
+				            {"NRG Stadium", "United States", 29.6847, -95.4107},
+				            {"SoFi Stadium", "United States", 33.9535, -118.3392}
+				        }
+				    ),
+				    Joined = Table.NestedJoin(Stadiums, {"stadium"}, Lookup, {"stadium"}, "L", JoinKind.LeftOuter),
+				    Expanded = Table.ExpandTableColumn(Joined, "L", {"Country", "Latitude", "Longitude"}),
+				    AddLocation = Table.AddColumn(Expanded, "Location", each [city] & ", " & (if [Country] = null then "Unknown" else [Country]), type text),
+				    Sorted = Table.Sort(AddLocation, {{"stadium", Order.Ascending}}),
+				    Typed = Table.TransformColumnTypes(Sorted, {{"stadium", type text}, {"city", type text}, {"Country", type text}, {"Latitude", type number}, {"Longitude", type number}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

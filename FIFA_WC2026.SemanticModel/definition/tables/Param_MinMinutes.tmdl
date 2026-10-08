@@ -1,0 +1,27 @@
+/// Slicer values for the minimum-minutes threshold.
+table Param_MinMinutes
+	lineageTag: 2999f7d5-08db-5c7a-bbde-01fd9b230e89
+
+	column 'Min Minutes'
+		dataType: int64
+		formatString: #,0
+		lineageTag: 89766e7f-babf-5019-bcf7-eb85f866c844
+		summarizeBy: none
+		sourceColumn: Min Minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Param_MinMinutes = m
+		mode: import
+		queryGroup: Helpers
+		source =
+				let
+				    // What-if style parameter: minimum minutes a player needs to appear in per-90 rankings
+				    Values = List.Numbers(0, 21, 150),  // 0, 150, ... 3000
+				    AsTable = Table.FromList(Values, Splitter.SplitByNothing(), {"Min Minutes"}),
+				    Typed = Table.TransformColumnTypes(AsTable, {{"Min Minutes", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

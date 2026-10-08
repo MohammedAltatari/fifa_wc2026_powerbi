@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+  "pageOrder": [
+    "p1_overview",
+    "p2_teams",
+    "p3_players",
+    "p4_physical",
+    "p5_compare",
+    "p6_profile"
+  ],
+  "activePageName": "p1_overview"
+}

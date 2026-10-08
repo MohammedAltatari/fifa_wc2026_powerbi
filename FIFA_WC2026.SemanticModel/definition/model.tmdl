@@ -1,0 +1,49 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Parameters
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup Staging
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup Facts
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup Dimensions
+
+	annotation PBI_QueryGroupOrder = 3
+
+queryGroup Helpers
+
+	annotation PBI_QueryGroupOrder = 4
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["CsvFilePath", "Raw_PlayerMatch", "_Measures", "Fact_PlayerMatch", "Fact_TeamMatch", "Dim_Player", "Dim_Team", "Dim_Stadium", "Dim_Match", "Dim_Date", "Compare_Player_A", "Compare_Player_B", "Comparison_Metrics", "Param_MinMinutes"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table _Measures
+ref table Fact_PlayerMatch
+ref table Fact_TeamMatch
+ref table Dim_Player
+ref table Dim_Team
+ref table Dim_Stadium
+ref table Dim_Match
+ref table Dim_Date
+ref table Compare_Player_A
+ref table Compare_Player_B
+ref table Comparison_Metrics
+ref table Param_MinMinutes
+
+ref cultureInfo en-US
+

@@ -1,0 +1,213 @@
+/// One row per player (1,248).
+table Dim_Player
+	lineageTag: c7d70c0d-4be1-58d0-a5fb-40518811b0f0
+
+	column player_id
+		dataType: string
+		isKey
+		lineageTag: 2c78f0c5-cf29-5bf1-98d8-7a60255dac28
+		summarizeBy: none
+		sourceColumn: player_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_name
+		dataType: string
+		lineageTag: b02b7f42-1ff0-5e24-bd66-ef505aca009c
+		summarizeBy: none
+		sourceColumn: player_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: 4d898f08-192c-5548-8320-9a7626aa62e7
+		summarizeBy: none
+		sourceColumn: age
+
+		annotation SummarizationSetBy = Automatic
+
+	column nationality
+		dataType: string
+		lineageTag: 6e144817-c5a2-57c2-913c-bc656d49a6de
+		summarizeBy: none
+		sourceColumn: nationality
+
+		annotation SummarizationSetBy = Automatic
+
+	column team
+		dataType: string
+		lineageTag: 874a0140-516f-5b12-bae9-df9c3f6095c8
+		summarizeBy: none
+		sourceColumn: team
+
+		annotation SummarizationSetBy = Automatic
+
+	column jersey_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 451f7426-24c4-5e45-b22f-bcac6e4dfd49
+		summarizeBy: none
+		sourceColumn: jersey_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column position
+		dataType: string
+		lineageTag: 42db8dee-5d4d-526a-b6f1-1e9178b62102
+		summarizeBy: none
+		sourceColumn: position
+		sortByColumn: 'Position Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 66c800e4-9d40-5adc-990a-0a98793d216d
+		summarizeBy: none
+		sourceColumn: height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight_kg
+		dataType: int64
+		formatString: 0
+		lineageTag: fa3e25de-2709-53ca-9d78-1ec0db78e16a
+		summarizeBy: none
+		sourceColumn: weight_kg
+
+		annotation SummarizationSetBy = Automatic
+
+	column preferred_foot
+		dataType: string
+		lineageTag: c74da3d9-33a0-572b-8c11-4177082ff64f
+		summarizeBy: none
+		sourceColumn: preferred_foot
+
+		annotation SummarizationSetBy = Automatic
+
+	column club_name
+		dataType: string
+		lineageTag: c5186f70-3cd4-5242-a6ec-15534ed6d2e1
+		summarizeBy: none
+		sourceColumn: club_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column market_value_eur
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 917e2093-8738-592a-bdaa-1d4ea337f777
+		summarizeBy: none
+		sourceColumn: market_value_eur
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Player Label'
+		dataType: string
+		lineageTag: 429d6ece-5ff4-5de2-af2a-0c154d0227db
+		summarizeBy: none
+		sourceColumn: Player Label
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Position Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4e1e8e04-f1c2-5b4c-8df2-e230cedbdf7f
+		summarizeBy: none
+		sourceColumn: Position Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age Group'
+		dataType: string
+		lineageTag: 975eb75b-dac3-5624-95e0-496dc17f7359
+		summarizeBy: none
+		sourceColumn: Age Group
+		sortByColumn: 'Age Group Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age Group Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c8d00cba-553e-5796-8192-2642b13016a3
+		summarizeBy: none
+		sourceColumn: Age Group Order
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Market Value (EUR M)'
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 7bd0b1b9-05a7-5fb8-aaa2-57da876650d0
+		summarizeBy: none
+		sourceColumn: Market Value (EUR M)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Value Band'
+		dataType: string
+		lineageTag: 2b961859-a161-5ab1-8af8-fa5a43649d2c
+		summarizeBy: none
+		sourceColumn: Value Band
+		sortByColumn: 'Value Band Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Value Band Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 307b8059-c5f4-5e2d-9ed5-7c2630426ab0
+		summarizeBy: none
+		sourceColumn: Value Band Order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Player = m
+		mode: import
+		queryGroup: Dimensions
+		source =
+				let
+				    Source = Raw_PlayerMatch,
+				    Selected = Table.SelectColumns(Source, {"player_id", "player_name", "age", "nationality", "team", "jersey_number", "position", "height_cm", "weight_kg", "preferred_foot", "club_name", "market_value_eur"}),
+				    // Player attributes are constant across matches (verified), so one row per player_id
+				    Distinct = Table.Distinct(Selected, {"player_id"}),
+				    // 3 pairs of team-mates share the same name -> add the shirt number to make labels unique
+				    NameCounts = Table.Group(Distinct, {"player_name"}, {{"NameCount", each Table.RowCount(_), Int64.Type}}),
+				    JoinedCounts = Table.NestedJoin(Distinct, {"player_name"}, NameCounts, {"player_name"}, "N", JoinKind.LeftOuter),
+				    ExpandedCounts = Table.ExpandTableColumn(JoinedCounts, "N", {"NameCount"}),
+				    AddLabel = Table.AddColumn(ExpandedCounts, "Player Label", each if [NameCount] > 1 then [player_name] & " #" & Text.From([jersey_number]) else [player_name], type text),
+				    AddPositionOrder = Table.AddColumn(AddLabel, "Position Order", each List.PositionOf({"Goalkeeper", "Defender", "Midfielder", "Forward"}, [position]) + 1, Int64.Type),
+				    AddAgeGroup = Table.AddColumn(AddPositionOrder, "Age Group", each
+				        if [age] <= 21 then "21 & under"
+				        else if [age] <= 25 then "22-25"
+				        else if [age] <= 29 then "26-29"
+				        else if [age] <= 33 then "30-33"
+				        else "34+", type text),
+				    AddAgeGroupOrder = Table.AddColumn(AddAgeGroup, "Age Group Order", each List.PositionOf({"21 & under", "22-25", "26-29", "30-33", "34+"}, [Age Group]) + 1, Int64.Type),
+				    AddValueM = Table.AddColumn(AddAgeGroupOrder, "Market Value (EUR M)", each [market_value_eur] / 1000000, type number),
+				    AddValueBand = Table.AddColumn(AddValueM, "Value Band", each
+				        if [market_value_eur] < 5000000 then "Under 5M"
+				        else if [market_value_eur] < 10000000 then "5M-10M"
+				        else if [market_value_eur] < 20000000 then "10M-20M"
+				        else if [market_value_eur] < 50000000 then "20M-50M"
+				        else "50M+", type text),
+				    AddValueBandOrder = Table.AddColumn(AddValueBand, "Value Band Order", each List.PositionOf({"Under 5M", "5M-10M", "10M-20M", "20M-50M", "50M+"}, [Value Band]) + 1, Int64.Type),
+				    Removed = Table.RemoveColumns(AddValueBandOrder, {"NameCount"}),
+				    Typed = Table.TransformColumnTypes(Removed, {
+				        {"player_id", type text}, {"player_name", type text}, {"age", Int64.Type}, {"nationality", type text},
+				        {"team", type text}, {"jersey_number", Int64.Type}, {"position", type text}, {"height_cm", Int64.Type},
+				        {"weight_kg", Int64.Type}, {"preferred_foot", type text}, {"club_name", type text}, {"market_value_eur", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

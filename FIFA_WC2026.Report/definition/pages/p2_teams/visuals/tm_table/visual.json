@@ -1,0 +1,257 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "tm_table",
+  "position": {
+    "x": 16,
+    "y": 138,
+    "z": 600,
+    "height": 566,
+    "width": 760,
+    "tabOrder": 600
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Team"
+                    }
+                  },
+                  "Property": "team"
+                }
+              },
+              "queryRef": "Dim_Team.team",
+              "nativeQueryRef": "team",
+              "displayName": "Team"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Team"
+                    }
+                  },
+                  "Property": "Confederation"
+                }
+              },
+              "queryRef": "Dim_Team.Confederation",
+              "nativeQueryRef": "Confederation",
+              "displayName": "Conf."
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Team Matches"
+                }
+              },
+              "queryRef": "_Measures.Team Matches",
+              "nativeQueryRef": "Team Matches",
+              "displayName": "MP"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Wins"
+                }
+              },
+              "queryRef": "_Measures.Wins",
+              "nativeQueryRef": "Wins",
+              "displayName": "W"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Draws"
+                }
+              },
+              "queryRef": "_Measures.Draws",
+              "nativeQueryRef": "Draws",
+              "displayName": "D"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Losses"
+                }
+              },
+              "queryRef": "_Measures.Losses",
+              "nativeQueryRef": "Losses",
+              "displayName": "L"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Win %"
+                }
+              },
+              "queryRef": "_Measures.Win %",
+              "nativeQueryRef": "Win %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Points per Match"
+                }
+              },
+              "queryRef": "_Measures.Points per Match",
+              "nativeQueryRef": "Points per Match",
+              "displayName": "Pts/M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Goals For per Match"
+                }
+              },
+              "queryRef": "_Measures.Goals For per Match",
+              "nativeQueryRef": "Goals For per Match",
+              "displayName": "GF/M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Goals Against per Match"
+                }
+              },
+              "queryRef": "_Measures.Goals Against per Match",
+              "nativeQueryRef": "Goals Against per Match",
+              "displayName": "GA/M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Goal Difference"
+                }
+              },
+              "queryRef": "_Measures.Goal Difference",
+              "nativeQueryRef": "Goal Difference",
+              "displayName": "GD"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Team xG per Match"
+                }
+              },
+              "queryRef": "_Measures.Team xG per Match",
+              "nativeQueryRef": "Team xG per Match",
+              "displayName": "xG/M"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Win %"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Team results'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
